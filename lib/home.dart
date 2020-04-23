@@ -13,7 +13,19 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         backgroundColor: Colors.white,
       ),
-      body: MemoIndex()
+      body: Container(),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.import_contacts),
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return MemoIndex();
+              }
+            )
+          );
+        },
+      ),
     );
   }
 }
