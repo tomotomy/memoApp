@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memo/memoForm.dart';
 
 class MemoIndex extends StatefulWidget {
   @override
@@ -52,7 +53,13 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => MemoForm(),
+            )
+          );
+        },
       ),
     );
   } 
