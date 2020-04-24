@@ -30,7 +30,9 @@ class _MemoListState extends State<MemoList> {
         } else {
           return ListView(
             children: snapshot.data.map((data) {
-              return Card();
+              return Card(
+                child: Text(data.contents),
+              );
             }).toList(),
           );
         }

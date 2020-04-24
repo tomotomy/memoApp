@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:memo/service/DBProvider.dart';
-import 'package:uuid/uuid.dart';
-
-import 'models/memo.dart';
+import 'package:memo/models/memo.dart';
+import 'package:memo/service/memoBloc.dart';
 
 class MemoForm extends StatefulWidget {
+  String type;
+  MemoForm({this.type});
+
   @override
   _MemoFormState createState() => _MemoFormState();
 }
 
 class _MemoFormState extends State<MemoForm> {
   final _formKey = GlobalKey<FormState>();
+  final bloc = MemoBloc();
   String _content;
   String _title;
   String _type;
@@ -23,6 +25,14 @@ class _MemoFormState extends State<MemoForm> {
   }
 
   void saveMemo() {
+    bloc.create(
+      Memo(
+        title: "test",
+        contents: _content,
+        type: widget.type,
+        labelColor: "red",
+      )
+    );
   }
 
   @override
@@ -35,7 +45,7 @@ class _MemoFormState extends State<MemoForm> {
             color: Colors.black54
           ),
           leading: IconButton(
-            icon: Icon(Icons.arrow_left),
+            icon: Icon(Icons.arrow_back),
             onPressed: () {
               saveMemo();
               Navigator.of(context).pop();
@@ -55,7 +65,7 @@ class _MemoFormState extends State<MemoForm> {
                   ),
                   autofocus: true,
                   onChanged: (value) {
-                    setState(() => _content == value);
+                    setState(() => _content = value);
                   },
                 ),
               ),

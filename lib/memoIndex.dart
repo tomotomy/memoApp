@@ -10,6 +10,11 @@ class MemoIndex extends StatefulWidget {
 class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMixin {
   @override
   TabController _tabController;
+  final List<String> tabText = [
+    "事象",
+    "抽象",
+    "転用",
+  ];
 
   final List<Tab> tabs = <Tab>[
     Tab(text: "事象",),
@@ -57,7 +62,7 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => MemoForm(),
+              builder: (context) => MemoForm(type: tabText[_tabController.index],),
             )
           );
         },
