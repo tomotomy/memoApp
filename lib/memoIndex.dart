@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memo/memoForm.dart';
+import 'package:memo/memoList.dart';
 
 class MemoIndex extends StatefulWidget {
   @override
@@ -48,7 +49,7 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
       body: TabBarView(
         controller: _tabController,
         children: tabs.map((tab) {
-          return _createTab(tab);
+          return MemoList(type: tab);
         }).toList(),
       ),
       floatingActionButton: FloatingActionButton(

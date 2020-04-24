@@ -1,9 +1,10 @@
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'package:path/path.dart';
+import 'package:uuid/uuid.dart';
 
 class Memo {
-  final int id;
+  String id;
   final String title;
   final String contents;
   final String labelColor;
@@ -16,6 +17,10 @@ class Memo {
     this.labelColor,
     this.type,
   });
+
+  assignUUID() {
+    id = Uuid().v4();
+  }
 
   factory Memo.fromJson(Map<String, dynamic> json) => new Memo(
     id: json["id"],

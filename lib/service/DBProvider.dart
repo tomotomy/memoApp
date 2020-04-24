@@ -22,7 +22,7 @@ class DBProvider {
 
   initDB() async {
     Directory documentsDir = await getApplicationSupportDirectory();
-    String path = join(documentsDir.path, 'app,db');
+    String path = join(documentsDir.path, 'app.db');
 
     return await openDatabase(
       path, 
@@ -32,7 +32,7 @@ class DBProvider {
       },
       onCreate: (Database db, int version) async {
         await db.execute(
-          'CREATE TABLE memos(id INTEGER PRIMARY KEY, contents TEXT)'
+          'CREATE TABLE memo(id TEXT PRIMARY KEY, title TEXT, contents, TEXT, type TEXT, labelColor TEXT)'
         );
       } 
     );
@@ -60,9 +60,11 @@ class DBProvider {
     return res; 
   } 
 
-  deleteNote(int id) async {
+  deleteMemo(String id) async {
      final db = await database;
 
     db.delete('memo', where: 'id = ?', whereArgs: [id]);
   }
+  
 }
+
