@@ -6,7 +6,7 @@ import 'package:memo/service/DBProvider.dart';
 class NoteBloc {
 
   final _noteController = StreamController<List<Note>>();
-  Stream<List<Note>> get memoStream => _noteController.stream;
+  Stream<List<Note>> get noteStream => _noteController.stream;
 
   getNotes() async {
 

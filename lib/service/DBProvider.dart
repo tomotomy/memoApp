@@ -80,7 +80,7 @@ class DBProvider {
   getNotes() async {
     final db = await database;
     var res = await db.query('note');
-    List<Memo> notes = res.isNotEmpty ? res.map((note) => Note.fromJson(note)).toList() : [];
+    List<Note> notes = res.isNotEmpty ? res.map((note) => Note.fromJson(note)).toList() : [];
 
     return notes;
   }
