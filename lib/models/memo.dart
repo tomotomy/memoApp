@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 
 class Memo {
   String id;
+  String noteId;
   final String title;
   final String contents;
   final String labelColor;
@@ -12,6 +13,7 @@ class Memo {
 
   Memo({
     this.id,
+    this.noteId,
     this.title,
     this.contents,
     this.labelColor,
@@ -24,6 +26,7 @@ class Memo {
 
   factory Memo.fromJson(Map<String, dynamic> json) => new Memo(
     id: json["id"],
+    noteId: json["noteId"],
     title: json["title"],
     contents: json["contents"],
     labelColor: json["labelColor"],
@@ -32,6 +35,7 @@ class Memo {
 
   Map<String, dynamic> toJson() => {
     "id" : id,
+    "noteId": noteId,
     "title" : title,
     "contents" : contents,
     "labelColor" : labelColor,
