@@ -5,11 +5,12 @@ import 'package:memo/service/DBProvider.dart';
 
 class MemoBloc {
 
-  final _memoController = StreamController<List<Memo>>();
+  final _memoController = StreamController<List<Memo>>.broadcast();
   Stream<List<Memo>> get memoStream => _memoController.stream;
 
+
   getMemos({String type}) async {
-    _memoController.sink.add(await DBProvider.db.getMemos());
+    _memoController.sink.add(await DBProvider.db.getMemos(type));
   }
 
   MemoBloc() {

@@ -16,6 +16,7 @@ class _MemoListState extends State<MemoList> {
 
   @override
   void initState() {
+    bloc.getMemos(type: widget.type);
     // TODO: implement initState
     super.initState();
   }

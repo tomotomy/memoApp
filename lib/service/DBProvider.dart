@@ -33,11 +33,11 @@ class DBProvider {
       },
       onCreate: (Database db, int version) async {
         await db.execute(
-          'CREATE TABLE memo(id TEXT PRIMARY KEY, title TEXT, contents, TEXT, type TEXT, labelColor TEXT)',
+          'CREATE TABLE memo(id TEXT PRIMARY KEY, noteId TEXT,title TEXT, contents, TEXT, type TEXT, labelColor TEXT)',
         );
-        await db.execute(
-          'CREATE TABLE note(id TEXT PRIMARY KEY, title TEXT, date TEXT, point INTEGER'
-        );
+        // await db.execute(
+        //   'CREATE TABLE note(id TEXT PRIMARY KEY, title TEXT, date TEXT, point INTEGER'
+        // );
       } 
     );
   }
@@ -49,9 +49,9 @@ class DBProvider {
     return res;
   }
 
-  getMemos() async {
+  getMemos(String type) async {
     final db = await database;
-    var res = await db.query('memo');
+    var res = await db.query('memo', where: "type = ?", whereArgs: [type]);
     List<Memo> memos = res.isNotEmpty ? res.map((memo) => Memo.fromJson(memo)).toList() : [];
 
     return memos;

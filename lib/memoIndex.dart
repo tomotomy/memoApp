@@ -55,7 +55,7 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
       ),
       body: TabBarView(
         controller: _tabController,
-        children: tabs.map((tab) {
+        children: tabText.map((tab) {
           return MemoList(type: tab);
         }).toList(),
       ),
