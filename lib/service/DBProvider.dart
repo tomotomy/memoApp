@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:memo/models/memo.dart';
+import 'package:memo/models/note.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -69,9 +70,9 @@ class DBProvider {
     db.delete('note', where: 'id = ?', whereArgs: [id]);
   }
 
-  newNote(Memo memo) async {
+  newNote(Note note) async {
     final db = await database;
-    var res = await db.insert('note', memo.toJson());
+    var res = await db.insert('note', note.toJson());
 
     return res;
   }
@@ -79,14 +80,14 @@ class DBProvider {
   getNotes() async {
     final db = await database;
     var res = await db.query('note');
-    List<Memo> memos = res.isNotEmpty ? res.map((memo) => Memo.fromJson(memo)).toList() : [];
+    List<Memo> notes = res.isNotEmpty ? res.map((note) => Note.fromJson(note)).toList() : [];
 
-    return memos;
+    return notes;
   }
 
-  updateNote(Memo memo) async {
+  updateNote(Note note) async {
     final db = await database;
-    var res = await db.update('note', memo.toJson(), where: 'id = ?', whereArgs: [memo.id]);
+    var res = await db.update('note', note.toJson(), where: 'id = ?', whereArgs: [note.id]);
 
     return res; 
   } 

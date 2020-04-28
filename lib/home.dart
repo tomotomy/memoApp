@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memo/memoIndex.dart';
+import 'package:memo/models/note.dart';
+import 'package:memo/service/DBProvider.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -17,6 +19,7 @@ class _HomeState extends State<Home> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.import_contacts),
         onPressed: () {
+          
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {

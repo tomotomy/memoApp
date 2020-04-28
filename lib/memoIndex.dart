@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:memo/memoForm.dart';
 import 'package:memo/memoList.dart';
+import 'package:memo/models/note.dart';
+import 'package:memo/service/DBProvider.dart';
 
 class MemoIndex extends StatefulWidget {
   @override
@@ -60,6 +62,9 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
+          DBProvider.db.newNote(
+            Note(),
+          );
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => MemoForm(type: tabText[_tabController.index],),
