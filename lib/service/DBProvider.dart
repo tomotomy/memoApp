@@ -35,9 +35,9 @@ class DBProvider {
         await db.execute(
           'CREATE TABLE memo(id TEXT PRIMARY KEY, noteId TEXT,title TEXT, contents, TEXT, type TEXT, labelColor TEXT)',
         );
-        // await db.execute(
-        //   'CREATE TABLE note(id TEXT PRIMARY KEY, title TEXT, date TEXT, point INTEGER'
-        // );
+        await db.execute(
+          'CREATE TABLE note(id TEXT PRIMARY KEY, title TEXT, date TEXT, point INTEGER)'
+        );
       } 
     );
   }

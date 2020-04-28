@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memo/memoIndex.dart';
 import 'package:memo/models/memo.dart';
 import 'package:memo/service/memoBloc.dart';
 
@@ -25,14 +26,16 @@ class _MemoFormState extends State<MemoForm> {
   }
 
   void saveMemo() {
-    bloc.create(
-      Memo(
-        title: "test",
-        contents: _content,
-        type: widget.type,
-        labelColor: "red",
-      )
-    );
+    if (_content != null) {
+      bloc.create(
+        Memo(
+          title: "test",
+          contents: _content,
+          type: widget.type,
+          labelColor: "red",
+        )
+      );
+    }
   }
 
   @override
@@ -48,7 +51,11 @@ class _MemoFormState extends State<MemoForm> {
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               saveMemo();
-              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => MemoIndex(initTab: widget.type,),
+                )
+              );
             },
           ),
         ),

@@ -5,6 +5,9 @@ import 'package:memo/models/note.dart';
 import 'package:memo/service/DBProvider.dart';
 
 class MemoIndex extends StatefulWidget {
+  final String initTab;
+  MemoIndex({this.initTab});
+
   @override
   _MemoIndexState createState() => _MemoIndexState();
 }
@@ -27,6 +30,9 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
   void initState() {
     super.initState();
     _tabController = TabController(length: tabs.length, vsync: this);
+    if (widget.initTab != null) {
+      _tabController.index = tabText.indexOf(widget.initTab);
+    }
   }
 
   Widget _createTab(Tab tab){
@@ -65,7 +71,7 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
           DBProvider.db.newNote(
             Note(),
           );
-          Navigator.of(context).push(
+          Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => MemoForm(type: tabText[_tabController.index],),
             )
