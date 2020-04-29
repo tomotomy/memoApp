@@ -53,12 +53,25 @@ class _HomeState extends State<Home> {
                     ),
                   );
                 } else {
-                  return Column(
-                    children: snapshot.data.map((data) {
-                      return Card(
-                        child: Text(data.title),
-                      );  
-                    }).toList(),
+                  return Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      children: snapshot.data.map((data) {
+                        return InkWell(
+                          onTap: () {
+                            
+                          },
+                          child: Card(
+                            child: Container(
+                              height: 100,
+                              child: Center(
+                                child: Text(data.title)
+                              )
+                            ),
+                          ),
+                        );  
+                      }).toList(),
+                    ),
                   );
                 }
               },
