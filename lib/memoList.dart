@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memo/functions/StringToColor.dart';
 import 'package:memo/memoForm.dart';
 import 'package:memo/models/memo.dart';
 import 'package:memo/service/memoBloc.dart';
@@ -33,6 +34,7 @@ class _MemoListState extends State<MemoList> {
         } else {
           return ListView(
             children: snapshot.data.map((data) {
+              final color = changeToColor(data.labelColor);
               return InkWell(
                 onTap: () {
                   Navigator.of(context).pushReplacement(
@@ -46,16 +48,29 @@ class _MemoListState extends State<MemoList> {
                   );
                 },
                 child: Card(
-                  child: Container(
-                    padding: EdgeInsets.all(20),
-                    height: 100,
-                    child: Text(
-                      data.contents,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold
-                      )
-                    )
+                  child: Row(
+                    children: <Widget>[
+                      SizedBox(
+                        width: 20,
+                        height: 100,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: color,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.fromLTRB(10,20,10,20),
+                        height: 100,
+                        child: Text(
+                          data.contents,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold
+                          )
+                        )
+                      ),
+                    ],
                   ),
                 ),
               );
