@@ -51,7 +51,7 @@ class DBProvider {
 
   getMemos(String type, String noteId) async {
     final db = await database;
-    var res = await db.query('memo', where: "type = ?", whereArgs: [type]);
+    var res = await db.query("memo", where: 'type = ? and noteId = ?', whereArgs: [type, noteId]);
     List<Memo> memos = res.isNotEmpty ? res.map((memo) => Memo.fromJson(memo)).toList() : [];
 
     return memos;

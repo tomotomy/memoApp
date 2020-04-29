@@ -17,7 +17,7 @@ class _MemoListState extends State<MemoList> {
 
   @override
   void initState() {
-    bloc.getMemos(type: widget.type);
+    bloc.getMemos(type: widget.type, noteId: widget.noteId);
     // TODO: implement initState
     super.initState();
   }
@@ -33,7 +33,7 @@ class _MemoListState extends State<MemoList> {
           return ListView(
             children: snapshot.data.map((data) {
               return Card(
-                child: Text(data.noteId),
+                child: Text(data.contents),
               );
             }).toList(),
           );

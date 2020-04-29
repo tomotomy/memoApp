@@ -59,7 +59,13 @@ class _HomeState extends State<Home> {
                       children: snapshot.data.map((data) {
                         return InkWell(
                           onTap: () {
-
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return MemoIndex(noteId: data.id,);
+                                }
+                              )
+                            );
                           },
                           child: Card(
                             child: Container(

@@ -9,7 +9,7 @@ class MemoBloc {
   Stream<List<Memo>> get memoStream => _memoController.stream;
 
 
-  getMemos({String type}) async {
+  getMemos({String type, String noteId}) async {
     _memoController.sink.add(await DBProvider.db.getMemos(type, noteId));
   }
 

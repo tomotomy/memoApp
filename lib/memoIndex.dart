@@ -63,15 +63,12 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
       body: TabBarView(
         controller: _tabController,
         children: tabText.map((tab) {
-          return MemoList(type: tab);
+          return MemoList(type: tab,noteId: widget.noteId,);
         }).toList(),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          DBProvider.db.newNote(
-            Note(),
-          );
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => MemoForm(type: tabText[_tabController.index],noteId: widget.noteId,),
