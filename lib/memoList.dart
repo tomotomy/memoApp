@@ -34,7 +34,7 @@ class _MemoListState extends State<MemoList> {
         } else {
           return ListView(
             children: snapshot.data.map((data) {
-              final color = changeToColor(data.labelColor);
+              final color = stringToColor(data.labelColor);
               return InkWell(
                 onTap: () {
                   Navigator.of(context).pushReplacement(
