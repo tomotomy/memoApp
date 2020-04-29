@@ -21,10 +21,11 @@ class NoteBloc {
     _noteController.close();
   }
 
-  create(Note note) {
+  String create(Note note) {
     note.assignUUID();
     DBProvider.db.newNote(note);
     getNotes();
+    return note.id;
   }
 
   update(Note note) {

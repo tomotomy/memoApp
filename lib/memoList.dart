@@ -5,7 +5,8 @@ import 'package:provider/provider.dart';
 
 class MemoList extends StatefulWidget {
   final type;
-  MemoList({this.type});
+  final String noteId;
+  MemoList({this.type,this.noteId});
 
   @override
   _MemoListState createState() => _MemoListState();
@@ -32,7 +33,7 @@ class _MemoListState extends State<MemoList> {
           return ListView(
             children: snapshot.data.map((data) {
               return Card(
-                child: Text(data.contents),
+                child: Text(data.noteId),
               );
             }).toList(),
           );

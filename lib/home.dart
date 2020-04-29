@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
         child: Icon(Icons.import_contacts),
         onPressed: () {
           final date = dateToString(DateTime.now());
-          bloc.create(
+          final noteId = bloc.create(
             Note(
               title: "未設定",
               date: date,
@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
-                return MemoIndex();
+                return MemoIndex(noteId: noteId,);
               }
             )
           );
@@ -59,7 +59,7 @@ class _HomeState extends State<Home> {
                       children: snapshot.data.map((data) {
                         return InkWell(
                           onTap: () {
-                            
+
                           },
                           child: Card(
                             child: Container(

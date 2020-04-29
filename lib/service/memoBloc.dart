@@ -4,16 +4,16 @@ import 'package:memo/models/memo.dart';
 import 'package:memo/service/DBProvider.dart';
 
 class MemoBloc {
-
+  final String noteId;
   final _memoController = StreamController<List<Memo>>.broadcast();
   Stream<List<Memo>> get memoStream => _memoController.stream;
 
 
   getMemos({String type}) async {
-    _memoController.sink.add(await DBProvider.db.getMemos(type));
+    _memoController.sink.add(await DBProvider.db.getMemos(type, noteId));
   }
 
-  MemoBloc() {
+  MemoBloc({this.noteId}) {
     getMemos();
   }
 

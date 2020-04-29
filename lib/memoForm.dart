@@ -5,7 +5,8 @@ import 'package:memo/service/memoBloc.dart';
 
 class MemoForm extends StatefulWidget {
   String type;
-  MemoForm({this.type});
+  String noteId;
+  MemoForm({this.type, @required this.noteId});
 
   @override
   _MemoFormState createState() => _MemoFormState();
@@ -30,6 +31,7 @@ class _MemoFormState extends State<MemoForm> {
       bloc.create(
         Memo(
           title: "test",
+          noteId: widget.noteId,
           contents: _content,
           type: widget.type,
           labelColor: "red",
@@ -53,7 +55,7 @@ class _MemoFormState extends State<MemoForm> {
               saveMemo();
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => MemoIndex(initTab: widget.type,),
+                  builder: (context) => MemoIndex(initTab: widget.type,noteId: widget.noteId,),
                 )
               );
             },
