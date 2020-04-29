@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memo/memoForm.dart';
 import 'package:memo/models/memo.dart';
 import 'package:memo/service/memoBloc.dart';
 import 'package:provider/provider.dart';
@@ -32,8 +33,31 @@ class _MemoListState extends State<MemoList> {
         } else {
           return ListView(
             children: snapshot.data.map((data) {
-              return Card(
-                child: Text(data.contents),
+              return InkWell(
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => MemoForm(
+                        type: widget.type,
+                        noteId: widget.noteId,
+                        memo: data,
+                      ),
+                    )
+                  );
+                },
+                child: Card(
+                  child: Container(
+                    padding: EdgeInsets.all(20),
+                    height: 100,
+                    child: Text(
+                      data.contents,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold
+                      )
+                    )
+                  ),
+                ),
               );
             }).toList(),
           );

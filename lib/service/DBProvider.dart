@@ -60,7 +60,6 @@ class DBProvider {
   updateMemo(Memo memo) async {
     final db = await database;
     var res = await db.update('memo', memo.toJson(), where: 'id = ?', whereArgs: [memo.id]);
-
     return res; 
   } 
 

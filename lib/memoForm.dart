@@ -6,7 +6,12 @@ import 'package:memo/service/memoBloc.dart';
 class MemoForm extends StatefulWidget {
   String type;
   String noteId;
-  MemoForm({this.type, @required this.noteId});
+  Memo memo;
+  MemoForm({
+    this.type, 
+    this.memo,
+    @required this.noteId,
+  });
 
   @override
   _MemoFormState createState() => _MemoFormState();
@@ -22,21 +27,39 @@ class _MemoFormState extends State<MemoForm> {
 
   @override
   void initState() {
+    if (widget.memo != null) {
+      _content = widget.memo.contents;
+      _title = widget.memo.title;
+      _labelColor = widget.memo.labelColor;
+    }
     // TODO: implement initState
     super.initState();
   }
 
   void saveMemo() {
     if (_content != null) {
-      bloc.create(
-        Memo(
-          title: "test",
-          noteId: widget.noteId,
-          contents: _content,
-          type: widget.type,
-          labelColor: "red",
-        )
-      );
+      if (widget.memo != null) {
+        bloc.update(
+          Memo(
+            id: widget.memo.id,
+            noteId: widget.memo.noteId,
+            type: widget.memo.type,
+            title: _title,
+            contents: _content,
+            labelColor: _labelColor,
+          )
+        );
+      } else {
+        bloc.create(
+          Memo(
+            title: "test",
+            noteId: widget.noteId,
+            contents: _content,
+            type: widget.type,
+            labelColor: "red",
+          )
+        );
+      }
     }
   }
 
@@ -69,6 +92,7 @@ class _MemoFormState extends State<MemoForm> {
                 key: _formKey,
                 child: TextFormField(
                   maxLines: 100,
+                  initialValue: _content,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(horizontal: 10),
                   ),
