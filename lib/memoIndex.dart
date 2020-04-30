@@ -4,12 +4,19 @@ import 'package:memo/memoList.dart';
 import 'package:memo/models/note.dart';
 import 'package:memo/service/DBProvider.dart';
 import 'package:memo/service/noteBloc.dart';
+import 'package:provider/provider.dart';
 
 class MemoIndex extends StatefulWidget {
   final String initTab;
+  final NoteBloc bloc;
   final String noteId;
   final Note note;
-  MemoIndex({this.initTab,this.note,this.noteId});
+  MemoIndex({
+    this.initTab,
+    this.bloc,
+    this.note,
+    this.noteId
+  });
 
   @override
   _MemoIndexState createState() => _MemoIndexState();
@@ -20,7 +27,6 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
   TextEditingController _textFieldController = TextEditingController();
   TabController _tabController;
   String title;
-  final bloc = NoteBloc();
   final List<String> tabText = [
     "事象",
     "抽象",
@@ -36,6 +42,7 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
   void initState() {
     super.initState();
     _tabController = TabController(length: tabs.length, vsync: this);
+    title = widget.note != null ? widget.note.title : "未設定";
     if (widget.initTab != null) {
       _tabController.index = tabText.indexOf(widget.initTab);
     }
@@ -49,7 +56,9 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
             title: Text('タイトル設定'),
             content: TextField(
               controller: _textFieldController,
-              decoration: widget.note.title != null ? InputDecoration(hintText: widget.note.title) : null,
+              decoration: InputDecoration(
+                hintText: widget.note != null ? widget.note.title : "未設定"
+              ),
             ), 
             actions: <Widget>[
               new FlatButton(
@@ -61,12 +70,15 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
               new FlatButton( 
                 child: Text("OK"),
                 onPressed: () {
-                  bloc.update(Note(
-                    id: widget.note.id,
-                    date: widget.note.date,
-                    title: _textFieldController.text,
-                    point: widget.note.point
-                  ));  
+                  if (_textFieldController.text != null) {
+
+                    widget.bloc.update(Note(
+                      id: widget.note.id,
+                      date: widget.note.date,
+                      title: _textFieldController.text,
+                      point: widget.note.point
+                    ));
+                  }
                   Navigator.of(context).pop();
                 },
               )
@@ -87,10 +99,12 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: widget.note != null ? Text(
-          widget.note.title,
-          style: TextStyle(color: Colors.black54),
-        ) : null,
+        title: Text(
+          title,
+          style: TextStyle(
+            color: Colors.black54
+          ),
+        ) ,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black54),
         bottom: TabBar(

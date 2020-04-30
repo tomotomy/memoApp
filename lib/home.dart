@@ -5,12 +5,8 @@ import 'package:memo/models/note.dart';
 import 'package:memo/service/DBProvider.dart';
 import 'package:memo/service/noteBloc.dart';
 
-class Home extends StatefulWidget {
-  @override
-  _HomeState createState() => _HomeState();
-}
 
-class _HomeState extends State<Home> {
+class Home extends StatelessWidget {
   final bloc = NoteBloc();
 
   @override
@@ -23,7 +19,7 @@ class _HomeState extends State<Home> {
         child: Icon(Icons.import_contacts),
         onPressed: () {
           final date = dateToString(DateTime.now());
-          final noteId = bloc.create(
+          final note = bloc.create(
             Note(
               title: "未設定",
               date: date,
@@ -33,7 +29,10 @@ class _HomeState extends State<Home> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
-                return MemoIndex(noteId: noteId,);
+                return MemoIndex(
+                  bloc: bloc,
+                  note: note
+                );
               }
             )
           );
@@ -62,7 +61,11 @@ class _HomeState extends State<Home> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return MemoIndex(noteId: data.id,note: data,);
+                                  return MemoIndex(
+                                    noteId: data.id,
+                                    note: data,
+                                    bloc: bloc,
+                                  );
                                 }
                               )
                             );

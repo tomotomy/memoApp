@@ -66,13 +66,15 @@ class _MemoListState extends State<MemoList> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.fromLTRB(10,20,10,20),
+                        padding: EdgeInsets.fromLTRB(10,10,10,10),
                         height: 100,
                         child: Text(
                           data.contents,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 20,
-                            fontWeight: FontWeight.bold
+                            fontWeight: FontWeight.w500
                           )
                         )
                       ),

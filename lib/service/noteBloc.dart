@@ -2,15 +2,16 @@ import 'dart:async';
 
 import 'package:memo/models/note.dart';
 import 'package:memo/service/DBProvider.dart';
+import 'package:rxdart/subjects.dart';
 
 class NoteBloc {
 
-  final _noteController = StreamController<List<Note>>();
+  final _noteController = StreamController<List<Note>>.broadcast();
   Stream<List<Note>> get noteStream => _noteController.stream;
 
   getNotes() async {
-
     _noteController.sink.add(await DBProvider.db.getNotes());
+
   }
 
   NoteBloc() {
@@ -21,11 +22,11 @@ class NoteBloc {
     _noteController.close();
   }
 
-  String create(Note note) {
+  Note create(Note note) {
     note.assignUUID();
     DBProvider.db.newNote(note);
     getNotes();
-    return note.id;
+    return note;
   }
 
   update(Note note) {
