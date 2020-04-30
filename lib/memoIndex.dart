@@ -3,11 +3,13 @@ import 'package:memo/memoForm.dart';
 import 'package:memo/memoList.dart';
 import 'package:memo/models/note.dart';
 import 'package:memo/service/DBProvider.dart';
+import 'package:memo/service/noteBloc.dart';
 
 class MemoIndex extends StatefulWidget {
   final String initTab;
   final String noteId;
-  MemoIndex({this.initTab,@required this.noteId});
+  final Note note;
+  MemoIndex({this.initTab,this.note,this.noteId});
 
   @override
   _MemoIndexState createState() => _MemoIndexState();
@@ -15,7 +17,10 @@ class MemoIndex extends StatefulWidget {
 
 class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMixin {
   @override
+  TextEditingController _textFieldController = TextEditingController();
   TabController _tabController;
+  String title;
+  final bloc = NoteBloc();
   final List<String> tabText = [
     "事象",
     "抽象",
@@ -36,6 +41,41 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
     }
   }
 
+  void setTitle() {
+    showDialog(
+      context: context,
+      builder: (context) {
+         return AlertDialog(
+            title: Text('タイトル設定'),
+            content: TextField(
+              controller: _textFieldController,
+              decoration: widget.note.title != null ? InputDecoration(hintText: widget.note.title) : null,
+            ), 
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              new FlatButton( 
+                child: Text("OK"),
+                onPressed: () {
+                  bloc.update(Note(
+                    id: widget.note.id,
+                    date: widget.note.date,
+                    title: _textFieldController.text,
+                    point: widget.note.point
+                  ));  
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+      }
+    );
+  }
+
   Widget _createTab(Tab tab){
     return Center(
       child: Text("10 min Rest Time" , style: TextStyle(
@@ -47,6 +87,10 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: widget.note != null ? Text(
+          widget.note.title,
+          style: TextStyle(color: Colors.black54),
+        ) : null,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black54),
         bottom: TabBar(
@@ -59,11 +103,23 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
           indicatorPadding: EdgeInsets.symmetric(horizontal: 18.0,vertical: 8),
           labelColor: Colors.black,
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              setTitle();
+            },
+          )
+        ],
       ),
       body: TabBarView(
         controller: _tabController,
         children: tabText.map((tab) {
-          return MemoList(type: tab,noteId: widget.noteId,);
+          return MemoList(
+            type: tab,
+            noteId: widget.noteId,
+            note: widget.note,
+          );
         }).toList(),
       ),
       floatingActionButton: FloatingActionButton(
@@ -71,7 +127,11 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
         onPressed: () {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => MemoForm(type: tabText[_tabController.index],noteId: widget.noteId,),
+              builder: (context) => MemoForm(
+                type: tabText[_tabController.index],
+                noteId: widget.noteId,
+                note: widget.note,
+              ),
             )
           );
         },

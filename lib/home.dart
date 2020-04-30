@@ -62,7 +62,7 @@ class _HomeState extends State<Home> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return MemoIndex(noteId: data.id,);
+                                  return MemoIndex(noteId: data.id,note: data,);
                                 }
                               )
                             );

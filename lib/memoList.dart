@@ -8,7 +8,12 @@ import 'package:provider/provider.dart';
 class MemoList extends StatefulWidget {
   final type;
   final String noteId;
-  MemoList({this.type,this.noteId});
+  final note;
+  MemoList({
+    this.type,
+    this.noteId,
+    this.note,
+  });
 
   @override
   _MemoListState createState() => _MemoListState();
@@ -43,6 +48,7 @@ class _MemoListState extends State<MemoList> {
                         type: widget.type,
                         noteId: widget.noteId,
                         memo: data,
+                        note: widget.note,
                       ),
                     )
                   );

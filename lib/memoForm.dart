@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:memo/functions/StringToColor.dart';
 import 'package:memo/memoIndex.dart';
 import 'package:memo/models/memo.dart';
+import 'package:memo/models/note.dart';
 import 'package:memo/service/memoBloc.dart';
 
 class MemoForm extends StatefulWidget {
   String type;
   String noteId;
   Memo memo;
+  Note note;
   MemoForm({
     this.type, 
     this.memo,
+    @required this.note,
     @required this.noteId,
   });
 
@@ -156,7 +159,11 @@ Widget colorButton(String colorString, Color color) {
               saveMemo();
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => MemoIndex(initTab: widget.type,noteId: widget.noteId,),
+                  builder: (context) => MemoIndex(
+                    initTab: widget.type,
+                    noteId: widget.noteId,
+                    note: widget.note,
+                  ),
                 )
               );
             },
