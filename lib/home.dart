@@ -52,35 +52,45 @@ class Home extends StatelessWidget {
                     ),
                   );
                 } else {
-                  return Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      children: snapshot.data.map((data) {
-                        return InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return MemoIndex(
-                                    noteId: data.id,
-                                    note: data,
-                                    bloc: bloc,
-                                  );
-                                }
-                              )
-                            );
-                          },
-                          child: Card(
-                            child: Container(
-                              height: 100,
-                              child: Center(
-                                child: Text(data.title)
-                              )
+                  return Column(
+                    children: snapshot.data.map((data) {
+                      return Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return MemoIndex(
+                                        noteId: data.id,
+                                        note: data,
+                                        bloc: bloc,
+                                      );
+                                    }
+                                  )
+                                );
+                              },
+                              child: Card(
+                                elevation: 10,
+                                child: Container(
+                                  width: 200,
+                                  padding: EdgeInsets.all(10),
+                                  height: 100,
+                                  child: Text(
+                                    data.title,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500
+                                    ),
+                                  )
+                                ),
+                              ),
                             ),
                           ),
-                        );  
-                      }).toList(),
-                    ),
+                        ],
+                      );  
+                    }).toList(),
                   );
                 }
               },

@@ -58,11 +58,11 @@ class _MemoFormState extends State<MemoForm> {
       } else {
         bloc.create(
           Memo(
-            title: "test",
+            title: _title,
             noteId: widget.noteId,
             contents: _content,
             type: widget.type,
-            labelColor: "red",
+            labelColor: _labelColor,
           )
         );
       }

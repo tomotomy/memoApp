@@ -71,7 +71,9 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
                 child: Text("OK"),
                 onPressed: () {
                   if (_textFieldController.text != null) {
-
+                    setState(() {
+                      title = _textFieldController.text;
+                    });
                     widget.bloc.update(Note(
                       id: widget.note.id,
                       date: widget.note.date,
