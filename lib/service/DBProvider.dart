@@ -49,9 +49,9 @@ class DBProvider {
     return res;
   }
 
-  getMemos(String type, String noteId) async {
+  getMemos(String type, String memoId) async {
     final db = await database;
-    var res = await db.query("memo", where: 'type = ? and noteId = ?', whereArgs: [type, noteId]);
+    var res = await db.query("memo", where: 'type = ?', whereArgs: [type]);
     List<Memo> memos = res.isNotEmpty ? res.map((memo) => Memo.fromJson(memo)).toList() : [];
 
     return memos;
@@ -64,9 +64,9 @@ class DBProvider {
   } 
 
   deleteMemo(String id) async {
-     final db = await database;
-
-    db.delete('note', where: 'id = ?', whereArgs: [id]);
+    final db = await database;
+    var res = await db.delete('memo', where: 'id = ?', whereArgs: [id]);
+    return res;
   }
 
   newNote(Note note) async {
@@ -90,9 +90,9 @@ class DBProvider {
   } 
 
   deleteNote(String id) async {
-     final db = await database;
-
-    db.delete('note', where: 'id = ?', whereArgs: [id]);
+    final db = await database;
+    var res = db.delete('note', where: 'id = ?', whereArgs: [id]);
+    return res;
   }
   
 }
