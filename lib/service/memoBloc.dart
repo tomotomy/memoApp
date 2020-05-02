@@ -9,8 +9,8 @@ class MemoBloc {
   Stream<List<Memo>> get memoStream => _memoController.stream;
 
 
-  getMemos({String type, String memoId}) async {
-    _memoController.sink.add(await DBProvider.db.getMemos(type, memoId));
+  getMemos({String type, String noteId}) async {
+    _memoController.sink.add(await DBProvider.db.getMemos(type, noteId));
   }
 
   MemoBloc({this.memoId}) {
@@ -21,15 +21,15 @@ class MemoBloc {
     _memoController.close();
   }
 
-  create(Memo memo) {
+  create(Memo memo, String type) {
     memo.assignUUID();
     DBProvider.db.newMemo(memo);
-    getMemos();
+    getMemos(type: type, noteId: memo.noteId);
   }
 
-  update(Memo memo) {
+  update(Memo memo, String type) {
     DBProvider.db.updateMemo(memo);
-    getMemos();
+    getMemos(type: type, noteId: memo.noteId);
   }
 
   delete(String id, String type) {

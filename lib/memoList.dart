@@ -9,10 +9,12 @@ class MemoList extends StatefulWidget {
   final type;
   final String noteId;
   final note;
+  final MemoBloc bloc;
   MemoList({
     this.type,
-    this.noteId,
-    this.note,
+    @required this.noteId,
+    @required this.note,
+    @required this.bloc,
   });
 
   @override
@@ -24,11 +26,12 @@ class _MemoListState extends State<MemoList> {
 
   @override
   void initState() {
-    bloc = MemoBloc();
-    bloc.getMemos(type: widget.type, memoId: widget.noteId);
+    bloc = widget.bloc;
+    bloc.getMemos(type: widget.type, noteId: widget.noteId);
     // TODO: implement initState
     super.initState();
   }
+
 
   Widget memoCard(Memo data) {
     final color = stringToColor(data.labelColor);
@@ -65,13 +68,14 @@ class _MemoListState extends State<MemoList> {
       },
       child: InkWell(
         onTap: () {
-          Navigator.of(context).pushReplacement(
+          Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => MemoForm(
                 type: widget.type,
                 noteId: widget.noteId,
                 memo: data,
                 note: widget.note,
+                bloc: bloc,
               ),
             )
           );
@@ -110,21 +114,23 @@ class _MemoListState extends State<MemoList> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Memo>>(
-      stream: bloc.memoStream,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Container();
-        } else {
-          return ListView.builder(
-            itemCount: snapshot.data.length,
-            itemBuilder: (BuildContext context, int index) {
-              final data = snapshot.data[index];
-              return memoCard(data);
-            },
-          );
-        }
-      },
+    return Scaffold(
+      body: StreamBuilder<List<Memo>>(
+        stream: bloc.memoStream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Container();
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (BuildContext context, int index) {
+                final data = snapshot.data[index];
+                return memoCard(data);
+              },
+            );
+          }
+        },
+      ),
     );
   }
 }

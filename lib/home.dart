@@ -63,7 +63,6 @@ class Home extends StatelessWidget {
                                   MaterialPageRoute(
                                     builder: (context) {
                                       return MemoIndex(
-                                        noteId: data.id,
                                         note: data,
                                         bloc: bloc,
                                       );

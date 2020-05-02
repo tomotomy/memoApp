@@ -10,11 +10,13 @@ class MemoForm extends StatefulWidget {
   String noteId;
   Memo memo;
   Note note;
+  MemoBloc bloc;
   MemoForm({
     this.type, 
     this.memo,
     @required this.note,
     @required this.noteId,
+    @required this.bloc
   });
 
   @override
@@ -23,7 +25,6 @@ class MemoForm extends StatefulWidget {
 
 class _MemoFormState extends State<MemoForm> {
   final _formKey = GlobalKey<FormState>();
-  final bloc = MemoBloc();
   String _content;
   String _title;
   String _type;
@@ -45,7 +46,7 @@ class _MemoFormState extends State<MemoForm> {
   void saveMemo() {
     if (_content != null) {
       if (widget.memo != null) {
-        bloc.update(
+        widget.bloc.update(
           Memo(
             id: widget.memo.id,
             noteId: widget.memo.noteId,
@@ -53,17 +54,19 @@ class _MemoFormState extends State<MemoForm> {
             title: _title,
             contents: _content,
             labelColor: _labelColor,
-          )
+          ),
+          widget.memo.type,
         );
       } else {
-        bloc.create(
+        widget.bloc.create(
           Memo(
             title: _title,
             noteId: widget.noteId,
             contents: _content,
             type: widget.type,
             labelColor: _labelColor,
-          )
+          ),
+          widget.type,
         );
       }
     }
@@ -157,15 +160,7 @@ Widget colorButton(String colorString, Color color) {
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               saveMemo();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => MemoIndex(
-                    initTab: widget.type,
-                    noteId: widget.noteId,
-                    note: widget.note,
-                  ),
-                )
-              );
+              Navigator.pop(context);
             },
           ),
         ),

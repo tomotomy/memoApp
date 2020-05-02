@@ -3,19 +3,18 @@ import 'package:memo/memoForm.dart';
 import 'package:memo/memoList.dart';
 import 'package:memo/models/note.dart';
 import 'package:memo/service/DBProvider.dart';
+import 'package:memo/service/memoBloc.dart';
 import 'package:memo/service/noteBloc.dart';
 import 'package:provider/provider.dart';
 
 class MemoIndex extends StatefulWidget {
   final String initTab;
   final NoteBloc bloc;
-  final String noteId;
   final Note note;
   MemoIndex({
     this.initTab,
     this.bloc,
     this.note,
-    this.noteId
   });
 
   @override
@@ -27,6 +26,8 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
   TextEditingController _textFieldController = TextEditingController();
   TabController _tabController;
   String title;
+  MemoBloc bloc;
+  String type;
   final List<String> tabText = [
     "事象",
     "抽象",
@@ -41,11 +42,18 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
 
   void initState() {
     super.initState();
+    bloc = MemoBloc();
     _tabController = TabController(length: tabs.length, vsync: this);
+    _tabController.addListener(setType);
     title = widget.note != null ? widget.note.title : "未設定";
     if (widget.initTab != null) {
       _tabController.index = tabText.indexOf(widget.initTab);
     }
+  }
+
+  void setType() {
+    type = tabText[_tabController.index];
+    print(type);
   }
 
   void setTitle() {
@@ -133,20 +141,22 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
         children: tabText.map((tab) {
           return MemoList(
             type: tab,
-            noteId: widget.noteId,
+            noteId: widget.note.id,
             note: widget.note,
+            bloc: bloc,
           );
         }).toList(),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.of(context).pushReplacement(
+          Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => MemoForm(
-                type: tabText[_tabController.index],
-                noteId: widget.noteId,
+                type: type,
+                noteId: widget.note.id,
                 note: widget.note,
+                bloc: bloc,
               ),
             )
           );
