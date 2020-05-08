@@ -126,17 +126,25 @@ class _MemoListState extends State<MemoList> {
           if (!snapshot.hasData) {
             return Container(
               child: Center(
-                child: Text("日々の気づきをメモに残しましょう"),
+                child: CircularProgressIndicator(),
               ),
             );
           } else {
-            return ListView.builder(
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                final data = snapshot.data[index];
-                return memoCard(data);
-              },
-            );
+            if (snapshot.data.length == 0) {
+              return Container(
+                child: Center(
+                  child: Text("日々の気づきをメモに残しましょう"),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final data = snapshot.data[index];
+                  return memoCard(data);
+                },
+              );
+            }
           }
         },
       ),
