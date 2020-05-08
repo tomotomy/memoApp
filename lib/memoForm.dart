@@ -140,62 +140,64 @@ Widget colorButton(String colorString, Color color) {
   
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Scaffold(
-        appBar: AppBar(
-          titleSpacing: 0,
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(
-            color: Colors.black54
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.color_lens),
-              onPressed: () {
-                colorChangeDialog();
-              },
-            )
-          ],
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              saveMemo();
-              Navigator.pop(context);
-            },
-          ),
-        ),
-        body: ListView(
-          children: <Widget>[
-            SizedBox(
-              height: 20,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: barColor,
-                ),
-              ),
+    return Scaffold(
+      body: Material(
+        child: Scaffold(
+          appBar: AppBar(
+            titleSpacing: 0,
+            backgroundColor: Colors.white,
+            iconTheme: IconThemeData(
+              color: Colors.black54
             ),
-            Padding(
-              padding: const EdgeInsets.only(top:10, right: 5, left: 5),
-              child: Form(
-                key: _formKey,
-                child: TextFormField(
-                  style: TextStyle(
-                    fontSize: 20
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.color_lens),
+                onPressed: () {
+                  colorChangeDialog();
+                },
+              )
+            ],
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                saveMemo();
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          body: ListView(
+            children: <Widget>[
+              SizedBox(
+                height: 20,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: barColor,
                   ),
-                  maxLines: 100,
-                  initialValue: _content,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10),                  
-                  ),
-                  autofocus: true,
-                  onChanged: (value) {
-                    setState(() => _content = value);
-                  },
                 ),
               ),
-            )
-          ],
-        )
+              Padding(
+                padding: const EdgeInsets.only(top:10, right: 5, left: 5),
+                child: Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    style: TextStyle(
+                      fontSize: 20
+                    ),
+                    maxLines: 100,
+                    initialValue: _content,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(horizontal: 10),                  
+                    ),
+                    autofocus: true,
+                    onChanged: (value) {
+                      setState(() => _content = value);
+                    },
+                  ),
+                ),
+              )
+            ],
+          )
+        ),
       ),
     );
   }

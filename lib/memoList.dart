@@ -5,6 +5,11 @@ import 'package:memo/models/memo.dart';
 import 'package:memo/service/memoBloc.dart';
 import 'package:provider/provider.dart';
 
+enum LoadingStatus {
+  LOADING,
+  COMPLETE
+}
+
 class MemoList extends StatefulWidget {
   final type;
   final String noteId;
@@ -23,11 +28,12 @@ class MemoList extends StatefulWidget {
 
 class _MemoListState extends State<MemoList> {
   MemoBloc bloc;
+  LoadingStatus _loadingStatus;
 
   @override
   void initState() {
+    print("listpage: ${widget.type}");
     bloc = widget.bloc;
-    bloc.getMemos(type: widget.type, noteId: widget.noteId);
     // TODO: implement initState
     super.initState();
   }
@@ -112,14 +118,17 @@ class _MemoListState extends State<MemoList> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget body() {
     return Scaffold(
       body: StreamBuilder<List<Memo>>(
         stream: bloc.memoStream,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Container();
+            return Container(
+              child: Center(
+                child: Text("日々の気づきをメモに残しましょう"),
+              ),
+            );
           } else {
             return ListView.builder(
               itemCount: snapshot.data.length,
@@ -132,5 +141,10 @@ class _MemoListState extends State<MemoList> {
         },
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return body();
   }
 }
