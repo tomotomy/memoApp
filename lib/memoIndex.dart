@@ -44,6 +44,7 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
     super.initState();
     bloc = MemoBloc();
     _tabController = TabController(length: tabs.length, vsync: this);
+    setStream();
     _tabController.addListener(setStream);
     title = widget.note != null ? widget.note.title : "未設定";
     if (widget.initTab != null) {

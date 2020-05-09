@@ -137,10 +137,35 @@ Widget colorButton(String colorString, Color color) {
     ),
   );
 }
+
+Widget floatingActionButton() {
+  return FloatingActionButton.extended(
+    label: Text(
+      widget.type == "事象" ? "抽象化" : "転用",
+      style: TextStyle(
+        fontWeight: FontWeight.w400,
+        fontSize: 20
+      ),
+    ),
+    onPressed: () {
+      saveMemo();
+      Navigator.pushReplacement(context, 
+        MaterialPageRoute(builder: (context) => MemoForm(
+          bloc: widget.bloc,
+          type: widget.type == "事象" ? "抽象" : "転用",
+          note: widget.note,
+          noteId: widget.noteId,
+        ))
+      );
+    },
+  );
+}
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: widget.type != "転用" 
+      ? floatingActionButton() : Container(),
       body: Material(
         child: Scaffold(
           appBar: AppBar(

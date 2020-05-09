@@ -32,9 +32,8 @@ class MemoBloc {
     getMemos(type: type, noteId: memo.noteId);
   }
 
-  delete(String id, String type) {
+  delete(String id) {
     DBProvider.db.deleteMemo(id);
-    getMemos(type: type);
   }
 
 }

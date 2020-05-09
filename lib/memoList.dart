@@ -32,7 +32,6 @@ class _MemoListState extends State<MemoList> {
 
   @override
   void initState() {
-    print("listpage: ${widget.type}");
     bloc = widget.bloc;
     // TODO: implement initState
     super.initState();
@@ -59,7 +58,7 @@ class _MemoListState extends State<MemoList> {
         color: Colors.redAccent,
       ),
       onDismissed: (direction) {
-        bloc.delete(data.id, widget.type);
+        bloc.delete(data.id);
         Scaffold.of(context).showSnackBar(
           new SnackBar(
             backgroundColor: Colors.redAccent,
