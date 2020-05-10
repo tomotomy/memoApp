@@ -11,9 +11,11 @@ class MemoForm extends StatefulWidget {
   Memo memo;
   Note note;
   MemoBloc bloc;
+  String color;
   MemoForm({
     this.type, 
     this.memo,
+    this.color,
     @required this.note,
     @required this.noteId,
     @required this.bloc
@@ -38,6 +40,10 @@ class _MemoFormState extends State<MemoForm> {
       _title = widget.memo.title;
       _labelColor = widget.memo.labelColor;
       barColor = stringToColor(widget.memo.labelColor);
+    } 
+    if (widget.color != null) {
+      _labelColor = widget.color;
+      barColor = stringToColor(_labelColor);
     }
     // TODO: implement initState
     super.initState();
@@ -155,6 +161,7 @@ Widget floatingActionButton() {
           type: widget.type == "事象" ? "抽象" : "転用",
           note: widget.note,
           noteId: widget.noteId,
+          color: _labelColor,
         ))
       );
     },

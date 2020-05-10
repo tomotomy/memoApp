@@ -136,12 +136,14 @@ class _MemoListState extends State<MemoList> {
                 ),
               );
             } else {
-              return ListView.builder(
-                itemCount: snapshot.data.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final data = snapshot.data[index];
-                  return memoCard(data);
+              return ReorderableListView(
+                onReorder: (oldIndex, newIndex) {
+                  print(oldIndex);
+                  print(newIndex);
                 },
+                children: snapshot.data.map((data) {
+                  return memoCard(data);
+                }).toList(),
               );
             }
           }
