@@ -5,12 +5,14 @@ class Note {
   final String title;
   final String date;
   final int point;
+  final bool isBookmarked;
 
   Note({
     this.id,
     this.title,
     this.date,
-    this.point
+    this.point,
+    this.isBookmarked,
   });
 
   assignUUID() {
@@ -21,13 +23,15 @@ class Note {
     id: json["id"],
     title: json["title"],
     date: json["date"],
-    point: json["point"]
+    point: json["point"],
+    isBookmarked: json["isBookmarked"] == 1 ? true : false,
   );
 
   Map<String, dynamic> toJson() => {
     "id" : id,
     "title" : title,
     "date": date,
-    "point": point
+    "point": point,
+    "isBookmarked" : isBookmarked ? 1 : 0,
   };
 }

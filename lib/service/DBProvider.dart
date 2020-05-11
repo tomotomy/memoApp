@@ -36,7 +36,7 @@ class DBProvider {
           'CREATE TABLE memo(id TEXT PRIMARY KEY, noteId TEXT,title TEXT, contents, TEXT, type TEXT, labelColor TEXT)',
         );
         await db.execute(
-          'CREATE TABLE note(id TEXT PRIMARY KEY, title TEXT, date TEXT, point INTEGER)'
+          'CREATE TABLE note(id TEXT PRIMARY KEY, title TEXT, date TEXT, point INTEGER, isBookmarked INTEGER)'
         );
       } 
     );
@@ -51,7 +51,7 @@ class DBProvider {
 
   getMemos(String type, String noteId) async {
     final db = await database;
-    var res = await db.query("memo", where: 'type = ? and noteId = ?', whereArgs: [type, noteId], orderBy: "");
+    var res = await db.query("memo", where: 'type = ? and noteId = ?', whereArgs: [type, noteId]);
     List<Memo> memos = res.isNotEmpty ? res.map((memo) => Memo.fromJson(memo)).toList() : [];
 
     return memos;

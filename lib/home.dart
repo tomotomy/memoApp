@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:memo/functions/DateToString.dart';
 import 'package:memo/memoIndex.dart';
@@ -24,6 +25,7 @@ class Home extends StatelessWidget {
               title: "未設定",
               date: date,
               point: 0,
+              isBookmarked: false,
             )
           );
           Navigator.of(context).push(
@@ -76,12 +78,34 @@ class Home extends StatelessWidget {
                                   width: 200,
                                   padding: EdgeInsets.all(10),
                                   height: 100,
-                                  child: Text(
-                                    data.title,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500
-                                    ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      IconButton(
+                                        icon: Icon(
+                                          data.isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                                          color: Colors.black54,
+                                        ),
+                                        iconSize: 40,
+                                        onPressed: () {
+                                          bloc.update(
+                                            Note(
+                                              id: data.id,
+                                              date: data.date,
+                                              title: data.title,
+                                              point: data.point,
+                                              isBookmarked: !data.isBookmarked,
+                                            )
+                                          );
+                                        },
+                                      ),
+                                      Text(
+                                        data.title,
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500
+                                        ),
+                                      ),
+                                    ],
                                   )
                                 ),
                               ),
