@@ -6,70 +6,12 @@ import 'package:memo/memoIndex.dart';
 import 'package:memo/models/note.dart';
 import 'package:memo/service/DBProvider.dart';
 import 'package:memo/service/noteBloc.dart';
+import 'package:memo/widgets/homeWidget.dart';
+import 'package:memo/widgets/noteWIdget.dart';
 
 
 class Home extends StatelessWidget {
   final bloc = NoteBloc();
-
-  Widget bookmarkButton(Note data) {
-    return IconButton(
-      icon: Icon(
-        data.isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-        color: Colors.black54,
-      ),
-      iconSize: 40,
-      onPressed: () {
-        bloc.update(
-          Note(
-            id: data.id,
-            date: data.date,
-            title: data.title,
-            point: data.point,
-            isBookmarked: !data.isBookmarked,
-          )
-        );
-      },
-    );
-  }
-
-  Widget noteCard(BuildContext context,Note data) {
-    return Expanded(
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return MemoIndex(
-                  note: data,
-                  bloc: bloc,
-                );
-              }
-            )
-          );
-        },
-        child: Card(
-          elevation: 10,
-          child: Container(
-            width: 200,
-            padding: EdgeInsets.all(10),
-            height: 100,
-            child: Row(
-              children: <Widget>[
-                bookmarkButton(data),
-                Text(
-                  data.title,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500
-                  ),
-                ),
-              ],
-            )
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget drawer(BuildContext context) {
     return Drawer(
@@ -79,7 +21,7 @@ class Home extends StatelessWidget {
             onTap: () {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
-                  return BookmarkPage();
+                  return BookmarkPage(bloc: bloc,);
                 }
               ));
             },
@@ -122,13 +64,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(
-          color: Colors.black54,
-        ),
-      ),
+      appBar: appBar(),
       drawer: drawer(context),
       floatingActionButton: createNoteButton(context),
       body: ListView(
@@ -149,7 +85,7 @@ class Home extends StatelessWidget {
                     children: snapshot.data.map((data) {
                       return Row(
                         children: <Widget>[
-                          noteCard(context, data)
+                          noteCard(bloc,context,data)
                         ],
                       );  
                     }).toList(),

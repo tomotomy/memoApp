@@ -83,6 +83,13 @@ class DBProvider {
     return notes;
   }
 
+  getBookmarkedNotes() async {
+    final db = await database;
+    var res = await db.query('note', where: "isBookmarked", whereArgs: [1]);
+    List<Note> notes = res.isNotEmpty ? res.map((note) => Note.fromJson(note)).toList() : [];
+    return notes;
+  }
+
   updateNote(Note note) async {
     final db = await database;
     var res = await db.update('note', note.toJson(), where: 'id = ?', whereArgs: [note.id]);
