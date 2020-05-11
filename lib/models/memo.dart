@@ -7,7 +7,6 @@ class Memo {
   final String contents;
   final String labelColor;
   final String type;
-  final int order;
 
   Memo({
     this.id,
@@ -16,7 +15,6 @@ class Memo {
     this.contents,
     this.labelColor,
     this.type,
-    this.order,
   });
 
   assignUUID() {
@@ -30,7 +28,6 @@ class Memo {
     contents: json["contents"],
     labelColor: json["labelColor"],
     type: json["type"],
-    order: json["order"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -40,6 +37,5 @@ class Memo {
     "contents" : contents,
     "labelColor" : labelColor,
     "type" : type,
-    "order" : order
   };
 }
