@@ -10,6 +10,7 @@ import 'package:memo/widgets/noteWIdget.dart';
 
 class Home extends StatelessWidget {
   final bloc = NoteBloc();
+  final weeks = ["日","月", "火","水", "木", "金","土"];
 
   Widget drawer(BuildContext context) {
     return Drawer(
@@ -91,6 +92,15 @@ class Home extends StatelessWidget {
                     fontSize: 24,
                   ),
                 ),
+              ),
+              Row(
+                children: weeks.map((item) {
+                  return Expanded(
+                    child: Center(
+                      child: Text(item),
+                    ),
+                  );
+                }).toList(),
               )
             ],
           ),
