@@ -1,10 +1,8 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:memo/BookmarkPage.dart';
 import 'package:memo/functions/DateToString.dart';
 import 'package:memo/memoIndex.dart';
 import 'package:memo/models/note.dart';
-import 'package:memo/service/DBProvider.dart';
 import 'package:memo/service/noteBloc.dart';
 import 'package:memo/widgets/homeWidget.dart';
 import 'package:memo/widgets/noteWIdget.dart';
@@ -26,8 +24,14 @@ class Home extends StatelessWidget {
               ));
             },
             contentPadding: EdgeInsets.all(10),
-            title: Text("保存済みのノート"),
-            leading: Icon(Icons.bookmark),
+            title: Text(
+              "保存済みのノート",
+              style: TextStyle(fontSize: 20),
+            ),
+            leading: Icon(
+              Icons.bookmark,
+              size: 40,
+            ),
           )
         ],
       ),
@@ -61,6 +65,40 @@ class Home extends StatelessWidget {
     );
   }
 
+  Widget calendar() {
+    final today = DateTime.now();
+    return Container(
+      margin: EdgeInsets.all(5),
+      child: Card(
+        elevation: 10,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Center(
+                child: Text(
+                  today.year.toString(),
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.black54
+                  ),
+                ),
+              ),
+              Center(
+                child: Text(
+                  "${today.month.toString()}月",
+                  style: TextStyle(
+                    fontSize: 24,
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +107,7 @@ class Home extends StatelessWidget {
       floatingActionButton: createNoteButton(context),
       body: ListView(
         children: <Widget>[
-          Container(),
+          calendar(),
           Container(
             child: StreamBuilder<List<Note>>(
               stream: bloc.noteStream,
