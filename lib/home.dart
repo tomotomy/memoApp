@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:memo/BookmarkPage.dart';
+import 'package:memo/calendar.dart';
 import 'package:memo/functions/DateToString.dart';
 import 'package:memo/memoIndex.dart';
 import 'package:memo/models/note.dart';
@@ -10,7 +11,6 @@ import 'package:memo/widgets/noteWIdget.dart';
 
 class Home extends StatelessWidget {
   final bloc = NoteBloc();
-  final weeks = ["日","月", "火","水", "木", "金","土"];
 
   Widget drawer(BuildContext context) {
     return Drawer(
@@ -66,49 +66,6 @@ class Home extends StatelessWidget {
     );
   }
 
-  Widget calendar() {
-    final today = DateTime.now();
-    return Container(
-      margin: EdgeInsets.all(5),
-      child: Card(
-        elevation: 10,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Center(
-                child: Text(
-                  today.year.toString(),
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black54
-                  ),
-                ),
-              ),
-              Center(
-                child: Text(
-                  "${today.month.toString()}月",
-                  style: TextStyle(
-                    fontSize: 24,
-                  ),
-                ),
-              ),
-              Row(
-                children: weeks.map((item) {
-                  return Expanded(
-                    child: Center(
-                      child: Text(item),
-                    ),
-                  );
-                }).toList(),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,7 +74,7 @@ class Home extends StatelessWidget {
       floatingActionButton: createNoteButton(context),
       body: ListView(
         children: <Widget>[
-          calendar(),
+          Calendar(),
           Container(
             child: StreamBuilder<List<Note>>(
               stream: bloc.noteStream,
