@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class Calendar extends StatefulWidget {
@@ -11,6 +12,9 @@ class _CalendarState extends State<Calendar> {
   DateTime minDate;
   DateTime maxDate;
   List<DateTime> dateList;
+  List<List<DateTime>> _weeks = List();
+
+
 
   List<DateTime> _getDaysInWeek([DateTime selectedDate]) {
     if (selectedDate == null) selectedDate = new DateTime.now();
@@ -61,11 +65,10 @@ class _CalendarState extends State<Calendar> {
 
 
     date = DateTime.now();
-    List<List<DateTime>> week = [];
     for (int _cnt = 0;
     0 >= minDate.add(Duration(days: 7 * _cnt)).difference(maxDate.add(Duration(days: 7))).inDays;
     _cnt++) {
-      week.add(_getDaysInWeek(minDate.add(new Duration(days: 7 * _cnt))));
+      _weeks.add(_getDaysInWeek(minDate.add(new Duration(days: 7 * _cnt))));
     }
     super.initState();
   }
@@ -112,42 +115,56 @@ class _CalendarState extends State<Calendar> {
     );  
   }
 
+  Widget calendarCarousel(double width) {
+    return CarouselSlider(
+      options: CarouselOptions(
+        viewportFraction: 1.0,
+        enlargeCenterPage: false,
+        height: 300
+      ),
+      items: _weeks.map((week) {
+        return Container(
+          margin: EdgeInsets.all(5),
+          child: Card(
+            elevation: 10,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: <Widget>[
+                  Center(
+                    child: Text(
+                      date.year.toString(),
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black54
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      "${date.month.toString()}月",
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Colors.black87
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                  weekLable(),
+                  // calendarBody(),
+                ],
+              ),
+            ),
+          ),
+        );
+      }).toList()
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final today = DateTime.now();
-    return Container(
-      margin: EdgeInsets.all(5),
-      child: Card(
-        elevation: 10,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Center(
-                child: Text(
-                  today.year.toString(),
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black54
-                  ),
-                ),
-              ),
-              Center(
-                child: Text(
-                  "${today.month.toString()}月",
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.black87
-                  ),
-                ),
-              ),
-              SizedBox(height: 10,),
-              weekLable(),
-              calendarBody(),
-            ],
-          ),
-        ),
-      ),
-    );
+    final width = MediaQuery.of(context).size.width;
+    return calendarCarousel(width);
   }
 }
