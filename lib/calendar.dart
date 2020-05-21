@@ -12,49 +12,16 @@ class _CalendarState extends State<Calendar> {
   DateTime minDate;
   DateTime maxDate;
   List<DateTime> dateList;
-  List<List<DateTime>> _weeks = List();
+  List<DateTime> _weeks = List();
+  PageController controller;
+  GlobalKey key = GlobalKey();
 
 
-
-  List<DateTime> _getDaysInWeek([DateTime selectedDate]) {
-    if (selectedDate == null) selectedDate = new DateTime.now();
-
-    var firstDayOfCurrentWeek = _firstDayOfWeek(selectedDate);
-    var lastDayOfCurrentWeek = _lastDayOfWeek(selectedDate);
-
-    return _daysInRange(firstDayOfCurrentWeek, lastDayOfCurrentWeek)
-        .toList();
-  }
-
-  DateTime _firstDayOfWeek(DateTime date) {
-    var day = _createUTCMiddayDateTime(date);
-    return day.subtract(new Duration(days: date.weekday % 7));
-  }
-
-  DateTime _lastDayOfWeek(DateTime date) {
-    var day = _createUTCMiddayDateTime(date);
-    return day.add(new Duration(days: 7 - day.weekday % 7));
-  }
-
-  DateTime _createUTCMiddayDateTime(DateTime date) {
-    // Magic const: 12 is to maintain compatibility with date_utils
-    return new DateTime.utc(date.year, date.month, date.day, 12, 0, 0);
-  }
-
-  Iterable<DateTime> _daysInRange(DateTime start, DateTime end) {
-    var offset = start.timeZoneOffset;
-
-    return List<int>.generate(end.difference(start).inDays, (i) => i + 1)
-      .map((int i) {
-      var d = start.add(Duration(days: i - 1));
-
-      var timeZoneDiff = d.timeZoneOffset - offset;
-      if (timeZoneDiff.inSeconds != 0) {
-        offset = d.timeZoneOffset;
-        d = d.subtract(new Duration(seconds: timeZoneDiff.inSeconds));
-      }
-      return d;
-    });
+  static DateTime lastDayOfMonth(DateTime month) {
+    var beginningNextMonth = (month.month < 12)
+        ? new DateTime(month.year, month.month + 1, 1)
+        : new DateTime(month.year + 1, 1, 1);
+    return beginningNextMonth.subtract(new Duration(days: 1));
   }
 
   @override
@@ -62,15 +29,26 @@ class _CalendarState extends State<Calendar> {
     // TODO: implement initState
     minDate = DateTime(2019);
     maxDate = DateTime(DateTime.now().year + 1, DateTime.now().month, DateTime.now().day);
-
-
-    date = DateTime.now();
-    for (int _cnt = 0;
-    0 >= minDate.add(Duration(days: 7 * _cnt)).difference(maxDate.add(Duration(days: 7))).inDays;
-    _cnt++) {
-      _weeks.add(_getDaysInWeek(minDate.add(new Duration(days: 7 * _cnt))));
-    }
+    _weeks = [DateTime.now()];
     super.initState();
+  }
+
+  List<Widget> _buildDayTile(DateTime month) {
+    List<Widget> items = [];
+    final lastDay = lastDayOfMonth(month).day.toInt();
+    final firstDay = DateTime(month.year, month.month, 1);
+    print(firstDay.weekday);
+    for (int i = 0; i < firstDay.weekday; i++) {
+      if(firstDay.weekday == 7) {
+        break;
+      }
+      items.add(Text(""));
+    }
+    for (int i = 1; i <= lastDay; i++) {
+      final day = DateTime(month.year, month.month, i);
+      items.add(calendarTile(day));
+    }
+    return items;
   }
 
   Widget weekLable() {
@@ -82,12 +60,8 @@ class _CalendarState extends State<Calendar> {
             child: Text(
               item,
               style: index != 0 || index != 6 
-                ? TextStyle(
-                  color: Colors.black54
-                )
-                : TextStyle(
-                  color: index == 0 ? Colors.redAccent : Colors.blueAccent
-                )  
+                ? TextStyle( color: Colors.black54)
+                : TextStyle(color: index == 0 ? Colors.redAccent : Colors.blueAccent)  
             ),
           ),
         );
@@ -95,76 +69,87 @@ class _CalendarState extends State<Calendar> {
     );
   }
 
-  Widget calendarTile(String text) {
+  Widget calendarTile(DateTime date) {
     return Center(
-      child: Text(text),
+      child: Text(date.day.toString()),
     );
   }
 
-  Widget calendarBody() {
-    return Container(
-      height: 200,
-      child: GridView.count(
-        crossAxisCount: 7,
-        children: dateList.map((date) {
-          return Center(
-            child: Text(date.day.toString()),
-          );
-        }).toList()
-      ),
-    );  
+  Widget calendarBody(DateTime date) {
+    return GridView.count(
+     physics: NeverScrollableScrollPhysics(),
+     crossAxisCount: 7,
+     shrinkWrap: true,
+     children: _buildDayTile(date)
+      );  
   }
 
-  Widget calendarCarousel(double width) {
+  Widget calendarCard(int index) {
+    print(index);
+    final date = DateTime(DateTime.now().year, DateTime.now().month - (11 - index));
+    return Container(
+      margin: EdgeInsets.all(5),
+      child: Card(
+        elevation: 10,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              Center(
+                child: Text(
+                  date.year.toString(),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black54
+                  ),
+                ),
+              ),
+              Center(
+                child: Text(
+                  "${date.month.toString()}月",
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.black87
+                  ),
+                ),
+              ),
+              SizedBox(height: 10,),
+              weekLable(),
+              calendarBody(date),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget calendarCarousel() {
     return CarouselSlider(
       options: CarouselOptions(
         viewportFraction: 1.0,
         enlargeCenterPage: false,
-        height: 300
+        height: 450,
       ),
       items: _weeks.map((week) {
-        return Container(
-          margin: EdgeInsets.all(5),
-          child: Card(
-            elevation: 10,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: <Widget>[
-                  Center(
-                    child: Text(
-                      date.year.toString(),
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black54
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      "${date.month.toString()}月",
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Colors.black87
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10,),
-                  weekLable(),
-                  // calendarBody(),
-                ],
-              ),
-            ),
-          ),
-        );
+        
       }).toList()
+    );
+  }
+
+  Widget carousel() {
+    return Container(
+      height: 450,
+      child: PageView.builder(
+        itemCount: 12,
+        itemBuilder: (context, index) {
+          return calendarCard(index);
+        }
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final today = DateTime.now();
-    final width = MediaQuery.of(context).size.width;
-    return calendarCarousel(width);
+    return carousel();
   }
 }
