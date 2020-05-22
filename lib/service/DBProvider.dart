@@ -76,9 +76,9 @@ class DBProvider {
     return res;
   }
 
-  getNotes() async {
+  getNotes(String date) async {
     final db = await database;
-    var res = await db.query('note');
+    var res = await db.query('note', where: 'date = ?', whereArgs: [date]);
     List<Note> notes = res.isNotEmpty ? res.map((note) => Note.fromJson(note)).toList() : [];
     return notes;
   }

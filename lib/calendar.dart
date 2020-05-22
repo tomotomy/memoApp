@@ -1,7 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:memo/functions/DateToString.dart';
+import 'package:memo/service/noteBloc.dart';
 
 class Calendar extends StatefulWidget {
+  Calendar({@required this.bloc});
+
+  final NoteBloc bloc;
+
   @override
   _CalendarState createState() => _CalendarState();
 }
@@ -12,9 +18,7 @@ class _CalendarState extends State<Calendar> {
   DateTime minDate;
   DateTime maxDate;
   List<DateTime> dateList;
-  List<DateTime> _weeks = List();
   PageController controller;
-  GlobalKey key = GlobalKey();
 
 
   static DateTime lastDayOfMonth(DateTime month) {
@@ -29,8 +33,12 @@ class _CalendarState extends State<Calendar> {
     // TODO: implement initState
     minDate = DateTime(2019);
     maxDate = DateTime(DateTime.now().year + 1, DateTime.now().month, DateTime.now().day);
-    _weeks = [DateTime.now()];
+    controller = PageController(initialPage: 12);
     super.initState();
+  }
+
+  void setStream(String date) {
+    widget.bloc.getNotes(date);
   }
 
   List<Widget> _buildDayTile(DateTime month) {
@@ -70,8 +78,14 @@ class _CalendarState extends State<Calendar> {
   }
 
   Widget calendarTile(DateTime date) {
-    return Center(
-      child: Text(date.day.toString()),
+    return InkWell(
+      onTap: () {
+        final stringDate = dateToString(date);
+        setStream(stringDate);
+      },
+      child: Center(
+        child: Text(date.day.toString()),
+      ),
     );
   }
 
@@ -81,7 +95,7 @@ class _CalendarState extends State<Calendar> {
      crossAxisCount: 7,
      shrinkWrap: true,
      children: _buildDayTile(date)
-      );  
+    );  
   }
 
   Widget calendarCard(int index) {
@@ -123,23 +137,11 @@ class _CalendarState extends State<Calendar> {
     );
   }
 
-  Widget calendarCarousel() {
-    return CarouselSlider(
-      options: CarouselOptions(
-        viewportFraction: 1.0,
-        enlargeCenterPage: false,
-        height: 450,
-      ),
-      items: _weeks.map((week) {
-        
-      }).toList()
-    );
-  }
-
   Widget carousel() {
     return Container(
       height: 450,
       child: PageView.builder(
+        controller: controller,
         itemCount: 12,
         itemBuilder: (context, index) {
           return calendarCard(index);

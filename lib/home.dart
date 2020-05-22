@@ -10,9 +10,8 @@ import 'package:memo/widgets/noteWIdget.dart';
 
 
 class Home extends StatelessWidget {
-  final bloc = NoteBloc();
 
-  Widget drawer(BuildContext context) {
+  Widget drawer(BuildContext context, NoteBloc bloc) {
     return Drawer(
       child: ListView(
         children: <Widget>[
@@ -39,7 +38,7 @@ class Home extends StatelessWidget {
     );
   }
 
-  Widget createNoteButton(BuildContext context) {
+  Widget createNoteButton(BuildContext context, NoteBloc bloc) {
     return  FloatingActionButton(
       child: Icon(Icons.import_contacts),
       onPressed: () {
@@ -68,13 +67,15 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final date = dateToString(DateTime.now());
+    final bloc = NoteBloc(date: date);
     return Scaffold(
       appBar: appBar(),
-      drawer: drawer(context),
-      floatingActionButton: createNoteButton(context),
+      drawer: drawer(context, bloc),
+      floatingActionButton: createNoteButton(context, bloc),
       body: ListView(
         children: <Widget>[
-          Calendar(),
+          Calendar(bloc: bloc,),
           Container(
             child: StreamBuilder<List<Note>>(
               stream: bloc.noteStream,
