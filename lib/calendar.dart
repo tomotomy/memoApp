@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:memo/functions/DateToString.dart';
 import 'package:memo/service/noteBloc.dart';
+import 'package:badges/badges.dart';
 
 class Calendar extends StatefulWidget {
   Calendar({@required this.bloc});
@@ -78,14 +79,33 @@ class _CalendarState extends State<Calendar> {
   }
 
   Widget calendarTile(DateTime date) {
-    return InkWell(
-      onTap: () {
-        final stringDate = dateToString(date);
-        setStream(stringDate);
-      },
-      child: Center(
-        child: Text(date.day.toString()),
-      ),
+    final stringDate = dateToString(date);
+    bool isSame = (stringDate == dateToString(DateTime.now()));  
+    return Stack(
+      alignment: Alignment.topRight,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.greenAccent
+          ),
+          child: InkWell(
+            onTap: () {
+              final stringDate = dateToString(date);
+              setStream(stringDate);
+            },
+            child: Center(
+              child: Text(date.day.toString()),
+            ),
+          ),
+        ),
+        Container(
+          child: isSame 
+          ? Badge(badgeColor: Colors.blueAccent,)
+          : Container()
+        )
+      ],
     );
   }
 
@@ -99,7 +119,6 @@ class _CalendarState extends State<Calendar> {
   }
 
   Widget calendarCard(int index) {
-    print(index);
     final date = DateTime(DateTime.now().year, DateTime.now().month - (11 - index));
     return Container(
       margin: EdgeInsets.all(5),
