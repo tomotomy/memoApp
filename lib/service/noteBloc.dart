@@ -2,17 +2,20 @@ import 'dart:async';
 
 import 'package:memo/models/note.dart';
 import 'package:memo/service/DBProvider.dart';
-import 'package:rxdart/subjects.dart';
 
 class NoteBloc {
   final String date;
   final _noteController = StreamController<List<Note>>.broadcast();
   final _noteBookmarkedController = StreamController<List<Note>>.broadcast();
+  final _calendarNoteController = StreamController<Map<String, int>>.broadcast();
   Stream<List<Note>> get noteStream => _noteController.stream;
   Stream<List<Note>> get bookmarkedNoteStream => _noteBookmarkedController.stream;
+  Stream<Map<String, int>> get calendarNoteStream => _calendarNoteController.stream;
+
 
   getNotes(String date) async {
     _noteController.sink.add(await DBProvider.db.getNotes(date));
+    _calendarNoteController.add(await DBProvider.db.getAllNotes());
   }
 
   getBookmarkedNotes() async {

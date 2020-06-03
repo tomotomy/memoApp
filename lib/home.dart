@@ -65,6 +65,22 @@ class Home extends StatelessWidget {
     );
   }
 
+  Widget noNote() {
+    return Container(
+      margin: EdgeInsets.only(top: 40),
+      child: Center(
+        child: Text(
+          "ノートがありません",
+          style: TextStyle(
+            color: Colors.black54,
+            fontSize: 20,
+            fontWeight: FontWeight.w700
+          ),
+        )
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final date = dateToString(DateTime.now());
@@ -80,12 +96,8 @@ class Home extends StatelessWidget {
             child: StreamBuilder<List<Note>>(
               stream: bloc.noteStream,
               builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Container(
-                    child: Center(
-                      child: Text("ノートを作成しよう"),
-                    ),
-                  );
+                if (!snapshot.hasData || snapshot.data.length == 0) {
+                  return noNote();
                 } else {
                   return Column(
                     children: snapshot.data.map((data) {

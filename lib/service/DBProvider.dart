@@ -76,6 +76,16 @@ class DBProvider {
     return res;
   }
 
+  getAllNotes() async {
+    final db = await database;
+    var res = await db.query('note');
+    Map<String, int> calendarNotes = new Map.fromIterable(res,
+      key: (note) => note['date'],
+      value: (note) => note['point'],
+    );
+    return calendarNotes;
+  }
+
   getNotes(String date) async {
     final db = await database;
     var res = await db.query('note', where: 'date = ?', whereArgs: [date]);

@@ -8,7 +8,6 @@ class MemoBloc {
   final _memoController = StreamController<List<Memo>>.broadcast();
   Stream<List<Memo>> get memoStream => _memoController.stream;
 
-
   getMemos({String type, String noteId}) async {
     _memoController.sink.add(await DBProvider.db.getMemos(type, noteId));
   }
