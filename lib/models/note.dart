@@ -4,15 +4,21 @@ class Note {
   String id;
   final String title;
   final String date;
-  final int point;
   final bool isBookmarked;
+  final int matter;
+  final int abstraction;
+  final int diversion;
+  final int totalPoint;
 
   Note({
     this.id,
     this.title,
     this.date,
-    this.point,
     this.isBookmarked,
+    this.matter = 0,
+    this.abstraction = 0,
+    this.diversion = 0,
+    this.totalPoint = 0,
   });
 
   assignUUID() {
@@ -23,15 +29,21 @@ class Note {
     id: json["id"],
     title: json["title"],
     date: json["date"],
-    point: json["point"],
     isBookmarked: json["isBookmarked"] == 1 ? true : false,
+    matter: json['matter'],
+    abstraction: json['abstraction'],
+    diversion: json['diversion'],
+    totalPoint: json['totalPoint'],
   );
 
   Map<String, dynamic> toJson() => {
     "id" : id,
     "title" : title,
     "date": date,
-    "point": point,
     "isBookmarked" : isBookmarked ? 1 : 0,
+    "matter" : matter,
+    "abstraction" : abstraction,
+    "diversion" : diversion,
+    "totalPoint" : totalPoint,
   };
 }

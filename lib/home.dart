@@ -47,7 +47,6 @@ class Home extends StatelessWidget {
           Note(
             title: "未設定",
             date: date,
-            point: 0,
             isBookmarked: false,
           )
         );
@@ -55,7 +54,7 @@ class Home extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) {
               return MemoIndex(
-                bloc: bloc,
+                noteBloc: bloc,
                 note: note
               );
             }
@@ -81,6 +80,29 @@ class Home extends StatelessWidget {
     );
   }
 
+  Widget body(NoteBloc bloc) {
+    return Container(
+      child: StreamBuilder<List<Note>>(
+        stream: bloc.noteStream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.data.length == 0) {
+            return noNote();
+          } else {
+            return Column(
+              children: snapshot.data.map((data) {
+                return Row(
+                  children: <Widget>[
+                    noteCard(bloc,context,data)
+                  ],
+                );  
+              }).toList(),
+            );
+          }
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final date = dateToString(DateTime.now());
@@ -89,30 +111,16 @@ class Home extends StatelessWidget {
       appBar: appBar(),
       drawer: drawer(context, bloc),
       floatingActionButton: createNoteButton(context, bloc),
-      body: ListView(
-        children: <Widget>[
-          Calendar(bloc: bloc,),
-          Container(
-            child: StreamBuilder<List<Note>>(
-              stream: bloc.noteStream,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData || snapshot.data.length == 0) {
-                  return noNote();
-                } else {
-                  return Column(
-                    children: snapshot.data.map((data) {
-                      return Row(
-                        children: <Widget>[
-                          noteCard(bloc,context,data)
-                        ],
-                      );  
-                    }).toList(),
-                  );
-                }
-              },
-            ),
-          ),
-        ],
+      body: StreamBuilder<Map<String, int>>(
+        stream: bloc.calendarNotePointStream,
+        builder: (context, snapshot) {
+          return ListView(
+            children: <Widget>[
+              Calendar(bloc: bloc, pointData: snapshot.data,),
+              body(bloc)
+            ],
+          );
+        },
       )
     );
   }

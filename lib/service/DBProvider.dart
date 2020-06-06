@@ -36,7 +36,15 @@ class DBProvider {
           'CREATE TABLE memo(id TEXT PRIMARY KEY, noteId TEXT,title TEXT, contents, TEXT, type TEXT, labelColor TEXT)',
         );
         await db.execute(
-          'CREATE TABLE note(id TEXT PRIMARY KEY, title TEXT, date TEXT, point INTEGER, isBookmarked INTEGER)'
+          'CREATE TABLE note('
+            'id TEXT PRIMARY KEY,'
+            'title TEXT,' 
+            'date TEXT,'
+            'isBookmarked INTEGER,' 
+            'matter INTEGER,' 
+            'abstraction INTEGER,'
+            'diversion INTEGER,' 
+            'totalPoint INTEGER)'
         );
       } 
     );
@@ -74,16 +82,6 @@ class DBProvider {
     var res = await db.insert('note', note.toJson());
 
     return res;
-  }
-
-  getAllNotes() async {
-    final db = await database;
-    var res = await db.query('note');
-    Map<String, int> calendarNotes = new Map.fromIterable(res,
-      key: (note) => note['date'],
-      value: (note) => note['point'],
-    );
-    return calendarNotes;
   }
 
   getNotes(String date) async {

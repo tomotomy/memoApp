@@ -9,11 +9,11 @@ import 'package:provider/provider.dart';
 
 class MemoIndex extends StatefulWidget {
   final String initTab;
-  final NoteBloc bloc;
+  final NoteBloc noteBloc;
   final Note note;
   MemoIndex({
     this.initTab,
-    this.bloc,
+    this.noteBloc,
     this.note,
   });
 
@@ -26,7 +26,7 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
   TextEditingController _textFieldController = TextEditingController();
   TabController _tabController;
   String title;
-  MemoBloc bloc;
+  MemoBloc memoBloc;
   String type;
   final List<String> tabText = [
     "事象",
@@ -42,7 +42,7 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
 
   void initState() {
     super.initState();
-    bloc = MemoBloc();
+    memoBloc = MemoBloc();
     _tabController = TabController(length: tabs.length, vsync: this);
     setStream();
     _tabController.addListener(setStream);
@@ -54,47 +54,46 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
 
   void setStream() {
     type = tabText[_tabController.index];
-    bloc.getMemos(type: type, noteId: widget.note.id);
+    memoBloc.getMemos(type: type, noteId: widget.note.id);
   }
 
   void setTitle() {
     showDialog(
       context: context,
       builder: (context) {
-         return AlertDialog(
-            title: Text('タイトル設定'),
-            content: TextField(
-              controller: _textFieldController,
-              decoration: InputDecoration(
-                hintText: widget.note != null ? widget.note.title : "未設定"
-              ),
-            ), 
-            actions: <Widget>[
-              new FlatButton(
-                child: new Text('CANCEL'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              new FlatButton( 
-                child: Text("OK"),
-                onPressed: () {
-                  if (_textFieldController.text != null) {
-                    setState(() {
-                      title = _textFieldController.text;
-                    });
-                    widget.bloc.update(Note(
-                      id: widget.note.id,
-                      date: widget.note.date,
-                      title: _textFieldController.text,
-                      point: widget.note.point
-                    ));
-                  }
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
+        return AlertDialog(
+          title: Text('タイトル設定'),
+          content: TextField(
+            controller: _textFieldController,
+            decoration: InputDecoration(
+              hintText: widget.note != null ? widget.note.title : "未設定"
+            ),
+          ), 
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('CANCEL'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            new FlatButton( 
+              child: Text("OK"),
+              onPressed: () {
+                if (_textFieldController.text != null) {
+                  setState(() {
+                    title = _textFieldController.text;
+                  });
+                  widget.noteBloc.update(Note(
+                    id: widget.note.id,
+                    date: widget.note.date,
+                    title: _textFieldController.text,
+                  ));
+                }
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
       }
     );
   }
@@ -144,7 +143,8 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
             type: tab,
             noteId: widget.note.id,
             note: widget.note,
-            bloc: bloc,
+            memoBloc: memoBloc,
+            noteBloc: widget.noteBloc,
           );
         }).toList(),
       ),
@@ -157,7 +157,8 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
                 type: type,
                 noteId: widget.note.id,
                 note: widget.note,
-                bloc: bloc,
+                noteBloc: widget.noteBloc,
+                memoBloc: memoBloc,
               ),
             )
           );

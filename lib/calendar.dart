@@ -1,13 +1,15 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:memo/functions/DateToString.dart';
+import 'package:memo/models/note.dart';
 import 'package:memo/service/noteBloc.dart';
 import 'package:badges/badges.dart';
 
 class Calendar extends StatefulWidget {
-  Calendar({@required this.bloc});
+  Calendar({@required this.bloc, @required this.pointData});
 
   final NoteBloc bloc;
+  final Map<String, int> pointData;
 
   @override
   _CalendarState createState() => _CalendarState();
@@ -70,6 +72,11 @@ class _CalendarState extends State<Calendar> {
     controller = PageController(initialPage: 12);
   }
 
+  void setMonthNotesStream(int index) {
+    final month = DateTime(DateTime.now().year, DateTime.now().month - (11 - index));
+    widget.bloc.getMonthNotes(month);
+  }
+
   void setStream(String date) {
     widget.bloc.getNotes(date);
   }
@@ -80,7 +87,7 @@ class _CalendarState extends State<Calendar> {
     });
   }
 
-  List<Widget> _buildDayTile(DateTime month, Map data) {
+  List<Widget> _buildDayTile(DateTime month) {
     List<Widget> items = [];
     final lastDay = lastDayOfMonth(month).day.toInt();
     final firstDay = DateTime(month.year, month.month, 1);
@@ -92,7 +99,7 @@ class _CalendarState extends State<Calendar> {
     }
     for (int i = 1; i <= lastDay; i++) {
       final day = DateTime(month.year, month.month, i);
-      items.add(calendarTile(day, data));
+      items.add(calendarTile(day));
     }
     return items;
   }
@@ -115,7 +122,7 @@ class _CalendarState extends State<Calendar> {
     );
   }
 
-  Widget calendarTile(DateTime date, Map data) {
+  Widget calendarTile(DateTime date) {
     final stringDate = dateToString(date);
     bool isSame = (stringDate == dateToString(selectedDate)); 
     bool isAfter = (date.isAfter(DateTime.now()));
@@ -126,7 +133,7 @@ class _CalendarState extends State<Calendar> {
           margin: EdgeInsets.all(2),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: isAfter ? Colors.grey[100] : backgroundColor(data[stringDate])
+            color: isAfter ? Colors.grey[100] : backgroundColor(widget.pointData[stringDate])
           ),
           child: Theme(
             data: ThemeData(
@@ -155,12 +162,12 @@ class _CalendarState extends State<Calendar> {
     );
   }
 
-  Widget calendarBody(DateTime date, Map data) {
+  Widget calendarBody(DateTime date) {
     return GridView.count(
      physics: NeverScrollableScrollPhysics(),
      crossAxisCount: 7,
      shrinkWrap: true,
-     children: _buildDayTile(date, data)
+     children: _buildDayTile(date)
     );  
   }
 
@@ -188,7 +195,7 @@ class _CalendarState extends State<Calendar> {
     );
   }
 
-  Widget calendarCard(int index, Map data) {
+  Widget calendarCard(int index) {
     final date = DateTime(DateTime.now().year, DateTime.now().month - (11 - index));
     return Container(
       margin: EdgeInsets.all(5),
@@ -202,7 +209,7 @@ class _CalendarState extends State<Calendar> {
               calendarMonth(date),
               SizedBox(height: 10,),
               weekLable(),
-              calendarBody(date, data),
+              calendarBody(date),
             ],
           ),
         ),
@@ -210,27 +217,25 @@ class _CalendarState extends State<Calendar> {
     );
   }
 
-  Widget carousel(Map data) {
+  Widget carousel() {
     return Container(
       height: 450,
       child: PageView.builder(
         controller: controller,
         itemCount: 12,
         itemBuilder: (context, index) {
-          return calendarCard(index, data);
-        }
+          return calendarCard(index);
+        },
+        onPageChanged: (index) {
+          setMonthNotesStream(index);
+        },
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Map<String, int>>(
-      stream: widget.bloc.calendarNoteStream,
-      builder: (context, snapshot) {
-        final data = snapshot.data;
-        return carousel(data);
-      },  
-    );
+    print(widget.pointData['2020-06-06']);
+    return carousel();
   }
 }

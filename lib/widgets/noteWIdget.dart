@@ -16,7 +16,6 @@ Widget bookmarkButton(NoteBloc bloc, Note data) {
             id: data.id,
             date: data.date,
             title: data.title,
-            point: data.point,
             isBookmarked: !data.isBookmarked,
           )
         );
@@ -33,7 +32,7 @@ Widget bookmarkButton(NoteBloc bloc, Note data) {
               builder: (context) {
                 return MemoIndex(
                   note: data,
-                  bloc: bloc,
+                  noteBloc: bloc,
                 );
               }
             )

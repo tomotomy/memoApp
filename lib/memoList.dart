@@ -3,7 +3,7 @@ import 'package:memo/functions/StringToColor.dart';
 import 'package:memo/memoForm.dart';
 import 'package:memo/models/memo.dart';
 import 'package:memo/service/memoBloc.dart';
-import 'package:provider/provider.dart';
+import 'package:memo/service/noteBloc.dart';
 
 enum LoadingStatus {
   LOADING,
@@ -14,12 +14,14 @@ class MemoList extends StatefulWidget {
   final type;
   final String noteId;
   final note;
-  final MemoBloc bloc;
+  final MemoBloc memoBloc;
+  final NoteBloc noteBloc;
   MemoList({
     this.type,
     @required this.noteId,
     @required this.note,
-    @required this.bloc,
+    @required this.memoBloc,
+    @required this.noteBloc
   });
 
   @override
@@ -27,12 +29,14 @@ class MemoList extends StatefulWidget {
 }
 
 class _MemoListState extends State<MemoList> {
-  MemoBloc bloc;
+  MemoBloc memoBloc;
+  NoteBloc noteBloc;
   LoadingStatus _loadingStatus;
 
   @override
   void initState() {
-    bloc = widget.bloc;
+    memoBloc = widget.memoBloc;
+    noteBloc = widget.noteBloc;
     // TODO: implement initState
     super.initState();
   }
@@ -58,7 +62,7 @@ class _MemoListState extends State<MemoList> {
         color: Colors.redAccent,
       ),
       onDismissed: (direction) {
-        bloc.delete(data.id);
+        memoBloc.delete(data.id);
         Scaffold.of(context).showSnackBar(
           new SnackBar(
             backgroundColor: Colors.redAccent,
@@ -80,7 +84,8 @@ class _MemoListState extends State<MemoList> {
                 noteId: widget.noteId,
                 memo: data,
                 note: widget.note,
-                bloc: bloc,
+                memoBloc: memoBloc,
+                noteBloc: widget.noteBloc,
               ),
             )
           );
@@ -120,7 +125,7 @@ class _MemoListState extends State<MemoList> {
   Widget body() {
     return Scaffold(
       body: StreamBuilder<List<Memo>>(
-        stream: bloc.memoStream,
+        stream: memoBloc.memoStream,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Container(

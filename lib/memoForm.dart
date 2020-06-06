@@ -4,13 +4,15 @@ import 'package:memo/memoIndex.dart';
 import 'package:memo/models/memo.dart';
 import 'package:memo/models/note.dart';
 import 'package:memo/service/memoBloc.dart';
+import 'package:memo/service/noteBloc.dart';
 
 class MemoForm extends StatefulWidget {
   String type;
   String noteId;
   Memo memo;
   Note note;
-  MemoBloc bloc;
+  MemoBloc memoBloc;
+  NoteBloc noteBloc;
   String color;
   MemoForm({
     this.type, 
@@ -18,7 +20,8 @@ class MemoForm extends StatefulWidget {
     this.color,
     @required this.note,
     @required this.noteId,
-    @required this.bloc
+    @required this.memoBloc,
+    @required this.noteBloc,
   });
 
   @override
@@ -52,30 +55,62 @@ class _MemoFormState extends State<MemoForm> {
   void saveMemo() {
     if (_content != null) {
       if (widget.memo != null) {
-        widget.bloc.update(
-          Memo(
-            id: widget.memo.id,
-            noteId: widget.memo.noteId,
-            type: widget.memo.type,
-            title: _title,
-            contents: _content,
-            labelColor: _labelColor,
-          ),
-          widget.memo.type,
-        );
+        updateMemo();
       } else {
-        widget.bloc.create(
-          Memo(
-            title: _title,
-            noteId: widget.noteId,
-            contents: _content,
-            type: widget.type,
-            labelColor: _labelColor,
-          ),
-          widget.type,
-        );
+        createMemo();
+        updateNoteNumber();
       }
     }
+  }
+
+  void createMemo() {
+    widget.memoBloc.create(
+      Memo(
+        title: _title,
+        noteId: widget.noteId,
+        contents: _content,
+        type: widget.type,
+        labelColor: _labelColor,
+      ),
+      widget.type,
+    );
+  }
+
+  void updateMemo() {
+    widget.memoBloc.update(
+      Memo(
+        id: widget.memo.id,
+        noteId: widget.memo.noteId,
+        type: widget.memo.type,
+        title: _title,
+        contents: _content,
+        labelColor: _labelColor,
+      ),
+      widget.memo.type,
+    );
+  }
+
+  void updateNoteNumber() {
+    int point;
+    if (widget.type == '事象') {
+      point = 1;
+    } else if (widget.type == '抽象') {
+      point = 3;
+    } else {
+      point = 5;
+    }
+    widget.noteBloc.update(
+      Note(
+        id: widget.note.id,
+        title: widget.note.title,
+        isBookmarked: widget.note.isBookmarked,
+        date: widget.note.date,
+        matter: widget.type == '事象' ? (widget.note.matter + 1) : widget.note.matter,
+        abstraction: widget.type == '抽象' ? (widget.note.abstraction + 1) : widget.note.abstraction,
+        diversion: widget.type == '転用' ? (widget.note.diversion + 1) : widget.note.diversion, 
+        totalPoint: widget.note.totalPoint + point,
+      )
+    );
   }
 
   Future<void> colorChangeDialog() async {
@@ -157,7 +192,8 @@ Widget floatingActionButton() {
       saveMemo();
       Navigator.pushReplacement(context, 
         MaterialPageRoute(builder: (context) => MemoForm(
-          bloc: widget.bloc,
+          memoBloc: widget.memoBloc,
+          noteBloc: widget.noteBloc,
           type: widget.type == "事象" ? "抽象" : "転用",
           note: widget.note,
           noteId: widget.noteId,
