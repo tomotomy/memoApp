@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:memo/functions/StringToColor.dart';
 import 'package:memo/memoForm.dart';
 import 'package:memo/models/memo.dart';
+import 'package:memo/models/note.dart';
 import 'package:memo/service/memoBloc.dart';
 import 'package:memo/service/noteBloc.dart';
 
@@ -41,6 +42,29 @@ class _MemoListState extends State<MemoList> {
     super.initState();
   }
 
+  void updateNoteNumber() {
+    int point;
+    if (widget.type == '事象') {
+      point = 1;
+    } else if (widget.type == '抽象') {
+      point = 3;
+    } else {
+      point = 5;
+    }
+    widget.noteBloc.update(
+      Note(
+        id: widget.note.id,
+        title: widget.note.title,
+        isBookmarked: widget.note.isBookmarked,
+        date: widget.note.date,
+        matter: widget.type == '事象' ? (widget.note.matter - 1) : widget.note.matter,
+        abstraction: widget.type == '抽象' ? (widget.note.abstraction - 1) : widget.note.abstraction,
+        diversion: widget.type == '転用' ? (widget.note.diversion - 1) : widget.note.diversion, 
+        totalPoint: widget.note.totalPoint - point,
+      )
+    );
+  }
+
 
   Widget memoCard(Memo data) {
     final color = stringToColor(data.labelColor);
@@ -63,6 +87,7 @@ class _MemoListState extends State<MemoList> {
       ),
       onDismissed: (direction) {
         memoBloc.delete(data.id);
+        updateNoteNumber();
         Scaffold.of(context).showSnackBar(
           new SnackBar(
             backgroundColor: Colors.redAccent,

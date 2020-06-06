@@ -123,7 +123,8 @@ class _CalendarState extends State<Calendar> {
   }
 
   Widget calendarTile(DateTime date) {
-    final stringDate = dateToString(date);
+    final stringDate = dateToString(date); 
+    final point = widget.pointData[stringDate];
     bool isSame = (stringDate == dateToString(selectedDate)); 
     bool isAfter = (date.isAfter(DateTime.now()));
     return Stack(
@@ -133,7 +134,7 @@ class _CalendarState extends State<Calendar> {
           margin: EdgeInsets.all(2),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: isAfter ? Colors.grey[100] : backgroundColor(widget.pointData[stringDate])
+            color: isAfter ? Colors.grey[100] : backgroundColor(point)
           ),
           child: Theme(
             data: ThemeData(
@@ -148,7 +149,13 @@ class _CalendarState extends State<Calendar> {
                 }
               },
               child: Center(
-                child: Text(date.day.toString()),
+                child: Text(
+                  date.day.toString(),
+                  style: TextStyle(
+                    color: point != null && point > 6 ? Colors.white : Colors.black54,
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
               ),
             ),
           ),
