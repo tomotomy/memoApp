@@ -24,38 +24,73 @@ Widget bookmarkButton(NoteBloc bloc, Note data) {
   }
 
   Widget noteCard(NoteBloc bloc,BuildContext context,Note data) {
-    return Expanded(
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return MemoIndex(
-                  note: data,
-                  noteBloc: bloc,
-                );
-              }
-            )
-          );
-        },
+    return Container(
+      width: double.infinity,
+      child: Dismissible(
+        key: UniqueKey(),
+          direction: DismissDirection.endToStart,
+          background: Container(
+            margin: EdgeInsets.symmetric(vertical: 5),
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+            color: Colors.redAccent,
+          ),
+          onDismissed: (direction) {
+            Scaffold.of(context).showSnackBar(
+              new SnackBar(
+                backgroundColor: Colors.redAccent,
+                content: Text(
+                  "メモを削除しました",
+                  style: TextStyle(
+                    fontSize: 16
+                  ),
+                )
+              ),
+            );
+          },
         child: Card(
           elevation: 10,
           child: Container(
-            width: 200,
-            padding: EdgeInsets.all(10),
-            height: 100,
-            child: Row(
-              children: <Widget>[
-                bookmarkButton(bloc, data),
-                Text(
-                  data.title,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500
-                  ),
-                ),
-              ],
-            )
+            width: double.infinity,
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return MemoIndex(
+                        note: data,
+                        noteBloc: bloc,
+                      );
+                    }
+                  )
+                );
+              },
+              child: Container(
+                width: 200,
+                padding: EdgeInsets.all(10),
+                height: 100,
+                child: Row(
+                  children: <Widget>[
+                    bookmarkButton(bloc, data),
+                    Text(
+                      data.title,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500
+                      ),
+                    ),
+                  ],
+                )
+              ),
+            ),
           ),
         ),
       ),

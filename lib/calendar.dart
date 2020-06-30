@@ -70,6 +70,7 @@ class _CalendarState extends State<Calendar> {
     minDate = DateTime(2019);
     maxDate = DateTime(DateTime.now().year + 1, DateTime.now().month, DateTime.now().day);
     controller = PageController(initialPage: 12);
+    widget.bloc.getMonthNotes(selectedDate);
   }
 
   void setMonthNotesStream(int index) {
@@ -152,7 +153,7 @@ class _CalendarState extends State<Calendar> {
                 child: Text(
                   date.day.toString(),
                   style: TextStyle(
-                    color: point != null && point > 6 ? Colors.white : Colors.black54,
+                    color: point != null && point > 5 ? Colors.white : Colors.black54,
                     fontWeight: FontWeight.bold
                   ),
                 ),
@@ -242,7 +243,6 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.pointData['2020-06-06']);
     return carousel();
   }
 }

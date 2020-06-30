@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:memo/home.dart';
-import 'package:memo/memoIndex.dart';
 
 void main() {
   runApp(MyApp());

@@ -9,7 +9,21 @@ import 'package:memo/widgets/homeWidget.dart';
 import 'package:memo/widgets/noteWIdget.dart';
 
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  String date;
+  NoteBloc bloc;
+  
+  void initState() {
+    super.initState();
+    date = dateToString(DateTime.now()); 
+    bloc = NoteBloc(date: date);
+    bloc.getMonthNotes(DateTime.now());
+  }
 
   Widget drawer(BuildContext context, NoteBloc bloc) {
     return Drawer(
@@ -81,32 +95,26 @@ class Home extends StatelessWidget {
   }
 
   Widget body(NoteBloc bloc) {
-    return Container(
-      child: StreamBuilder<List<Note>>(
-        stream: bloc.noteStream,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData || snapshot.data.length == 0) {
-            return noNote();
-          } else {
-            return Column(
-              children: snapshot.data.map((data) {
-                return Row(
-                  children: <Widget>[
-                    noteCard(bloc,context,data)
-                  ],
-                );  
-              }).toList(),
-            );
-          }
-        },
-      ),
+    return StreamBuilder<List<Note>>(
+      stream: bloc.noteStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data.length == 0) {
+          return noNote();
+        } else {
+          return Column(
+            children: snapshot.data.map((data) {
+              return Container(
+                child: noteCard(bloc,context,data)
+              );  
+            }).toList(),
+          );
+        }
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final date = dateToString(DateTime.now());
-    final bloc = NoteBloc(date: date);
     return Scaffold(
       appBar: appBar(),
       drawer: drawer(context, bloc),
@@ -114,12 +122,16 @@ class Home extends StatelessWidget {
       body: StreamBuilder<Map<String, int>>(
         stream: bloc.calendarNotePointStream,
         builder: (context, snapshot) {
-          return ListView(
-            children: <Widget>[
-              Calendar(bloc: bloc, pointData: snapshot.data,),
-              body(bloc)
-            ],
-          );
+          if (snapshot.hasData) {
+            return ListView(
+              children: <Widget>[
+                Calendar(bloc: bloc, pointData: snapshot.data,),
+                body(bloc)
+              ],
+            );
+          } else {
+            return Center(child: CircularProgressIndicator(),);
+          }
         },
       )
     );
