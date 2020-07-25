@@ -52,9 +52,9 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
     }
   }
 
-  void setStream() {
+  void setStream() async {
     type = tabText[_tabController.index];
-    memoBloc.getMemos(type: type, noteId: widget.note.id);
+    await memoBloc.getMemos(type: type, noteId: widget.note.id);
   }
 
   void setTitle() {

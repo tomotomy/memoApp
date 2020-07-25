@@ -58,8 +58,8 @@ class _MemoFormState extends State<MemoForm> {
         updateMemo();
       } else {
         createMemo();
-        updateNoteNumber();
       }
+      updateNoteNumber();
     }
   }
 

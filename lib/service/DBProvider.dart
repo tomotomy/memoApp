@@ -59,7 +59,7 @@ class DBProvider {
 
   getMemos(String type, String noteId) async {
     final db = await database;
-    var res = await db.query("memo", where: 'type = ? and noteId = ?', whereArgs: [type, noteId]);
+    var res = await db.query("memo", where: 'type = ? AND noteId = ?', whereArgs: [type, noteId]);
     List<Memo> memos = res.isNotEmpty ? res.map((memo) => Memo.fromJson(memo)).toList() : [];
 
     return memos;
@@ -93,7 +93,7 @@ class DBProvider {
 
   getBookmarkedNotes() async {
     final db = await database;
-    var res = await db.query('note', where: "isBookmarked", whereArgs: [1]);
+    var res = await db.query('note', where: "isBookmarked = ?", whereArgs: [1]);
     List<Note> notes = res.isNotEmpty ? res.map((note) => Note.fromJson(note)).toList() : [];
     return notes;
   }

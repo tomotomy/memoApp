@@ -27,34 +27,24 @@ class _BookmarkPageState extends State<BookmarkPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
-      body: ListView(
-        children: <Widget>[
-          Container(),
-          Container(
-            child: StreamBuilder<List<Note>>(
-              stream: bloc.bookmarkedNoteStream,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Container(
-                    child: Center(
-                      child: Text("ノートを作成しよう"),
-                    ),
-                  );
-                } else {
-                  return Column(
-                    children: snapshot.data.map((data) {
-                      return Row(
-                        children: <Widget>[
-                          noteCard(bloc,context,data)
-                        ],
-                      );  
-                    }).toList(),
-                  );
-                }
-              },
-            ),
-          ),
-        ],
+      body: StreamBuilder<List<Note>>(
+        stream: bloc.bookmarkedNoteStream,
+        builder: (context, snapshot) {
+          print(snapshot);
+          if (!snapshot.hasData) {
+            return Container(
+              child: Center(
+                child: Text("ノートを作成しよう"),
+              ),
+            );
+          } else {
+            return Column(
+              children: snapshot.data.map((data) {
+                return noteCard(bloc,context,data);  
+              }).toList(),
+            );
+          }
+        },
       ),
     );
   }

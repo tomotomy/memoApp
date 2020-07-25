@@ -128,6 +128,7 @@ class _CalendarState extends State<Calendar> {
     final point = widget.pointData[stringDate];
     bool isSame = (stringDate == dateToString(selectedDate)); 
     bool isAfter = (date.isAfter(DateTime.now()));
+    print(point);
     return Stack(
       alignment: Alignment.topRight,
       children: <Widget>[
@@ -227,7 +228,7 @@ class _CalendarState extends State<Calendar> {
 
   Widget carousel() {
     return Container(
-      height: 450,
+      height: 405,
       child: PageView.builder(
         controller: controller,
         itemCount: 12,
