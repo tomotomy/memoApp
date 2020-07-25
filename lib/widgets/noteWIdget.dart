@@ -44,11 +44,12 @@ Widget bookmarkButton(NoteBloc bloc, Note data) {
             color: Colors.redAccent,
           ),
           onDismissed: (direction) {
+            bloc.delete(data.id, data.date);
             Scaffold.of(context).showSnackBar(
               new SnackBar(
                 backgroundColor: Colors.redAccent,
                 content: Text(
-                  "メモを削除しました",
+                  "ノートを削除しました",
                   style: TextStyle(
                     fontSize: 16
                   ),

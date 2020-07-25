@@ -166,9 +166,15 @@ class _MemoListState extends State<MemoList> {
                 ),
               );
             } else {
-              snapshot.data.map((data) {
-                return memoCard(data);
-              }).toList();
+              return ReorderableListView(
+                onReorder: (oldIndex, newIndex) {
+                  print(oldIndex);
+                  print(newIndex);
+                },
+                children: snapshot.data.map((data) {
+                  return memoCard(data);
+                }).toList(),
+              );
             }
           }
         },
