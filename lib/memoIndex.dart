@@ -83,11 +83,18 @@ class _MemoIndexState extends State<MemoIndex> with SingleTickerProviderStateMix
                   setState(() {
                     title = _textFieldController.text;
                   });
-                  widget.noteBloc.update(Note(
-                    id: widget.note.id,
-                    date: widget.note.date,
-                    title: _textFieldController.text,
-                  ));
+                  widget.noteBloc.update(
+                    Note(
+                      id: widget.note.id,
+                      date: widget.note.date,
+                      title: _textFieldController.text,
+                      isBookmarked: widget.note.isBookmarked,
+                      matter: widget.note.matter,
+                      abstraction: widget.note.abstraction,
+                      diversion: widget.note.diversion,
+                      totalPoint: widget.note.totalPoint,
+                    )
+                  );
                 }
                 Navigator.of(context).pop();
               },

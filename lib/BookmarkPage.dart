@@ -30,11 +30,11 @@ class _BookmarkPageState extends State<BookmarkPage> {
       body: StreamBuilder<List<Note>>(
         stream: bloc.bookmarkedNoteStream,
         builder: (context, snapshot) {
-          print(snapshot);
-          if (!snapshot.hasData) {
+          print(snapshot.data);
+          if (!snapshot.hasData || snapshot.data.length == 0) {
             return Container(
               child: Center(
-                child: Text("ノートを作成しよう"),
+                child: Text("日々のノートを保存しよう"),
               ),
             );
           } else {
