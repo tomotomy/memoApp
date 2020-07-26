@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:memo/functions/StringToColor.dart';
 import 'package:memo/memoIndex.dart';
@@ -6,6 +8,7 @@ import 'package:memo/models/note.dart';
 import 'package:memo/service/memoBloc.dart';
 import 'package:memo/service/noteBloc.dart';
 
+
 class MemoForm extends StatefulWidget {
   String type;
   String noteId;
@@ -13,7 +16,7 @@ class MemoForm extends StatefulWidget {
   Note note;
   MemoBloc memoBloc;
   NoteBloc noteBloc;
-  String color;
+  int color;
   MemoForm({
     this.type, 
     this.memo,
@@ -33,8 +36,7 @@ class _MemoFormState extends State<MemoForm> {
   String _content;
   String _title;
   String _type;
-  String _labelColor;
-  Color barColor;
+  int _labelColor;
 
   @override
   void initState() {
@@ -42,11 +44,10 @@ class _MemoFormState extends State<MemoForm> {
       _content = widget.memo.contents;
       _title = widget.memo.title;
       _labelColor = widget.memo.labelColor;
-      barColor = stringToColor(widget.memo.labelColor);
-    } 
-    if (widget.color != null) {
+    } else if (widget.color != null) {
       _labelColor = widget.color;
-      barColor = stringToColor(_labelColor);
+    } else {
+      _labelColor = Random().nextInt(Colors.primaries.length);
     }
     // TODO: implement initState
     super.initState();
@@ -61,6 +62,12 @@ class _MemoFormState extends State<MemoForm> {
       }
       updateNoteNumber();
     }
+  }
+
+  void changeColor() {
+    setState(() {
+      _labelColor = Random().nextInt(Colors.primaries.length);
+    });
   }
 
   void createMemo() {
@@ -113,50 +120,6 @@ class _MemoFormState extends State<MemoForm> {
     );
   }
 
-  Future<void> colorChangeDialog() async {
-    await showDialog<int>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          children: <Widget>[
-            Container(
-              child: Column(
-                children: <Widget>[
-                  Center(
-                    child: Wrap(
-                      runSpacing: -5,
-                      spacing: -30,
-                      direction: Axis.horizontal,
-                      children: <Widget>[
-                        colorButton('redAccent', Colors.redAccent),
-                        colorButton('pinkAccent', Colors.pinkAccent),
-                        colorButton('orangeAccent', Colors.orangeAccent),
-                        colorButton('yellow', Colors.yellow),
-                        colorButton('greenAccent', Colors.greenAccent),
-                        colorButton('tealAccent', Colors.tealAccent[400]),
-                        colorButton('lightBlueAccent', Colors.lightBlueAccent),
-                        colorButton('indigoAccent', Colors.indigoAccent),
-                        colorButton('deepPurple', Colors.deepPurple[300])
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  SimpleDialogOption(
-                    onPressed: () => Navigator.pop(context, 2),
-                    child: const Text('キャンセル'),
-                  )
-                ],
-              ),
-            )
-          ],
-        );
-      },
-    );
-  }
-
 Widget colorButton(String colorString, Color color) {
   return SimpleDialogOption(
     child: Container(
@@ -169,8 +132,7 @@ Widget colorButton(String colorString, Color color) {
         color: color,
         onPressed: () {
           setState(() {
-            _labelColor = colorString;
-            barColor = color;
+
           });
           Navigator.pop(context);
         },
@@ -221,7 +183,7 @@ Widget floatingActionButton() {
               IconButton(
                 icon: Icon(Icons.color_lens),
                 onPressed: () {
-                  colorChangeDialog();
+                  changeColor();
                 },
               )
             ],
@@ -239,7 +201,7 @@ Widget floatingActionButton() {
                 height: 20,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: barColor,
+                    color: Colors.primaries[_labelColor],
                   ),
                 ),
               ),

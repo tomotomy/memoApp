@@ -67,7 +67,6 @@ class _MemoListState extends State<MemoList> {
 
 
   Widget memoCard(Memo data) {
-    final color = stringToColor(data.labelColor);
     return Dismissible(
       key: UniqueKey(),
       direction: DismissDirection.endToStart,
@@ -123,7 +122,7 @@ class _MemoListState extends State<MemoList> {
                 height: 100,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: color,
+                    color: Colors.primaries[data.labelColor],
                   ),
                 ),
               ),

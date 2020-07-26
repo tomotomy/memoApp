@@ -33,7 +33,7 @@ class DBProvider {
       },
       onCreate: (Database db, int version) async {
         await db.execute(
-          'CREATE TABLE memo(id TEXT PRIMARY KEY, noteId TEXT,title TEXT, contents, TEXT, type TEXT, labelColor TEXT)',
+          'CREATE TABLE memo(id TEXT PRIMARY KEY, noteId TEXT,title TEXT, contents, TEXT, type TEXT, labelColor INTEGER)',
         );
         await db.execute(
           'CREATE TABLE note('

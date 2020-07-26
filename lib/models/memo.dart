@@ -5,7 +5,7 @@ class Memo {
   String noteId;
   final String title;
   final String contents;
-  final String labelColor;
+  final int labelColor;
   final String type;
 
   Memo({
